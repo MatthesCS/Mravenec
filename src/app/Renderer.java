@@ -22,6 +22,9 @@ import transforms.Mat4;
 import transforms.Mat4PerspRH;
 import transforms.Vec3D;
 import appUtils.textUtils;
+import oglutils.OGLRenderTarget;
+import oglutils.OGLTexture2D;
+import transforms.Mat4Scale;
 
 /**
  * GLSL sample:<br/>
@@ -37,8 +40,12 @@ public class Renderer implements GLEventListener, MouseListener,
 {
 
     int width, height, ox, oy;
+    int pocetBodu;
 
     textUtils textUtils;
+    
+    OGLTexture2D.Viewer textureViewer;
+    OGLRenderTarget renderTarget;
 
     OGLBuffers shader;
     OGLTextRenderer textRenderer;
@@ -51,6 +58,7 @@ public class Renderer implements GLEventListener, MouseListener,
     @Override
     public void init(GLAutoDrawable glDrawable)
     {
+        pocetBodu = 10;
         GL2 gl = glDrawable.getGL().getGL2();
 
         OGLUtils.printOGLparameters(gl);
@@ -66,6 +74,9 @@ public class Renderer implements GLEventListener, MouseListener,
                 .withZenith(Math.PI * -0.125);
 
         gl.glEnable(GL2.GL_DEPTH_TEST);
+        
+        renderTarget = new OGLRenderTarget(gl, 200, 200);
+        textureViewer = new OGLTexture2D.Viewer(gl);
 
         textRenderer = new OGLTextRenderer(gl, width, height);
         textUtils = new textUtils(textRenderer, width, height, glDrawable);
@@ -73,7 +84,7 @@ public class Renderer implements GLEventListener, MouseListener,
 
     void createBuffers(GL2 gl)
     {
-        shader = MeshGenerator.createGrid(gl, 10, "inParamPos");
+        shader = MeshGenerator.createGrid(gl, pocetBodu, "inParamPos");
     }
 
     @Override
@@ -87,9 +98,27 @@ public class Renderer implements GLEventListener, MouseListener,
         float[] mat = ToFloatArray.convert(cam.getViewMatrix().mul(proj));
 
         gl.glUseProgram(shader1);
-        gl.glUniformMatrix4fv(shaderLocMat, 1, false, mat, 0);
+        renderTarget.bind();
+        
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        
+        gl.glUniformMatrix4fv(
+                shaderLocMat,
+                1,
+                false,
+                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
+                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
 
         shader.draw(GL2.GL_TRIANGLES, shader1);
+        
+        gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
+        gl.glViewport(0, 0, width, height);
+        
+        gl.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        
+        textureViewer.view(renderTarget.getColorTexture(), -1, -1, 2);
 
         textUtils.vypisCopyright();
         textUtils.vypisTextOvládání();
