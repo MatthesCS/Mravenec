@@ -58,7 +58,7 @@ public class Renderer implements GLEventListener, MouseListener,
     @Override
     public void init(GLAutoDrawable glDrawable)
     {
-        pocetBodu = 10;
+        pocetBodu = 100;
         GL2 gl = glDrawable.getGL().getGL2();
 
         OGLUtils.printOGLparameters(gl);
@@ -84,7 +84,8 @@ public class Renderer implements GLEventListener, MouseListener,
 
     void createBuffers(GL2 gl)
     {
-        shader = MeshGenerator.createGrid(gl, pocetBodu, "inParamPos");
+        //shader = MeshGenerator.createGrid(gl, pocetBodu, "inParamPos");
+        shader = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 10);
     }
 
     @Override

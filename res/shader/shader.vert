@@ -1,5 +1,6 @@
 #version 150
 in vec2 inParamPos;
+in vec2 inColor;
 out vec3 vertColor;
 uniform mat4 mat;
 
@@ -15,5 +16,5 @@ vec3 surface(vec2 paramPos)
 void main() {
 	vec3 position = surface(inParamPos);
 	gl_Position = vec4(position, 1.0);
-        vertColor = vec3(inParamPos,0);
+        vertColor = vec3(inColor,0);
 }
