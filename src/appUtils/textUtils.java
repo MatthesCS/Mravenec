@@ -27,8 +27,9 @@ public class textUtils
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 20, text);
     }
     
-    public void vypisCopyright()
+    public void vypisCopyrightaKroky(int krok)
     {
-        textRenderer.drawStr2D(textRenderer.getWidth() - 90, 3, " (c) PGRF UHK");
+        int cislic = (int)(Math.log10(krok)+1);
+        textRenderer.drawStr2D(textRenderer.getWidth() - (149+cislic*4), 3, "Kroků: " + krok + "; (c) PGRF UHK");
     }
 }
