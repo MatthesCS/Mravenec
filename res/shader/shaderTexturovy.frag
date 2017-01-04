@@ -4,10 +4,14 @@ out vec4 outColor;
 uniform sampler2D texture;
 uniform float dilku;
 uniform float kroku;
+uniform float stop;
 
 void main() {
+    vec4 barva;
+    if ( stop == 0.0 )
+    {
     float dilek = 1/dilku;
-    vec4 barva = texture2D(texture, textCoord);
+    barva = texture2D(texture, textCoord);
     barva.r = 1.0;
     barva.g = 1.0;
 
@@ -62,6 +66,11 @@ void main() {
         barva.r = barvaNahore.r;
         barva.g = barvaNahore.g;
     }
-    
+
+    }
+    else
+    {
+        barva = texture2D(texture, textCoord);
+    }
     outColor = barva;
 } 

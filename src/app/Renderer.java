@@ -53,7 +53,7 @@ public class Renderer implements GLEventListener, MouseListener,
     OGLTextRenderer textRenderer;
 
     int shader1, shaderLocMat;
-    int shader2, shaderTexLocMat, shaderTexLocDilku, shaderTexLocKroku;
+    int shader2, shaderTexLocMat, shaderTexLocStop, shaderTexLocDilku, shaderTexLocKroku;
 
     Camera cam = new Camera();
     Mat4 proj;
@@ -62,7 +62,7 @@ public class Renderer implements GLEventListener, MouseListener,
     public void init(GLAutoDrawable glDrawable)
     {
         inicializace = true;
-        stop = false;
+        stop = true;
         kroku = 0;
         pocetBodu = 10;
         GL2 gl = glDrawable.getGL().getGL2();
@@ -78,6 +78,7 @@ public class Renderer implements GLEventListener, MouseListener,
         shaderTexLocMat = gl.glGetUniformLocation(shader2, "mat");
         shaderTexLocDilku = gl.glGetUniformLocation(shader2, "dilku");
         shaderTexLocKroku = gl.glGetUniformLocation(shader2, "kroku");
+        shaderTexLocStop = gl.glGetUniformLocation(shader2, "stop");
 
         cam = cam.withPosition(new Vec3D(5, 5, 2.5))
                 .withAzimuth(Math.PI * 1.25)
@@ -103,17 +104,14 @@ public class Renderer implements GLEventListener, MouseListener,
     @Override
     public void display(GLAutoDrawable glDrawable)
     {
+
+        GL2 gl = glDrawable.getGL().getGL2();
+
+        licha(glDrawable);
+
         if (!stop)
         {
-            GL2 gl = glDrawable.getGL().getGL2();
-
-            licha(glDrawable);
-
             kroku++;
-            if (kroku == 1)
-            {
-                stop = true;
-            }
         }
 
         textureViewer.view(mravenci1.getColorTexture(), -1, -1, 1);
@@ -159,6 +157,12 @@ public class Renderer implements GLEventListener, MouseListener,
                         .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
         gl.glUniform1f(shaderTexLocDilku, (float) pocetBodu - 1);
         gl.glUniform1f(shaderTexLocKroku, (float) kroku);
+        float s = (float) 0.0;
+        if (stop)
+        {
+            s = (float) 1.0;
+        }
+        gl.glUniform1f(shaderTexLocStop, s);
 
         mravenci1.getColorTexture().bind(shader2, "texture", 0);
         shaderTexturovy.draw(GL2.GL_TRIANGLES, shader2);
