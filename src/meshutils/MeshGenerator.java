@@ -84,12 +84,30 @@ public class MeshGenerator
                 float g;
                 if (mravencu < pocetMravencu && ((float) rand.nextInt(10000) / 100) < pravdepodobnostMravence)
                 {
-                    r = (float) 1;
-                    g = (float) 0;
+                    switch (rand.nextInt(4))
+                    {
+                        case 0:
+                            r = (float) 1.0; //doprava
+                            g = (float) 0;
+                            break;
+                        case 1:
+                            r = (float) 0.5; //doleva
+                            g = (float) 0;
+                            break;
+                        case 2:
+                            r = (float) 0.0; //nahoru
+                            g = (float) 1.0;
+                            break;
+                        case 3:
+                        default:
+                            r = (float) 0.0; //dolu
+                            g = (float) 0.5;
+                            break;
+                    }
                     mravencu++;
                 } else
                 {
-                    r = (float) 0;
+                    r = (float) 1;
                     g = (float) 1;
                 }
                 float a = (float) x / pocCtvercuX;
