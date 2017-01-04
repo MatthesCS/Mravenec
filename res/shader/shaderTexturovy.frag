@@ -3,7 +3,6 @@ in vec2 textCoord;
 out vec4 outColor;
 uniform sampler2D texture;
 uniform float dilku;
-uniform float kroku;
 uniform float stop;
 
 void main() {

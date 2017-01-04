@@ -2,7 +2,6 @@
 in vec2 inParamPos;
 out vec2 textCoord;
 uniform float dilku;
-uniform float kroku;
 uniform mat4 mat;
 
 vec3 surface(vec2 paramPos)
