@@ -23,8 +23,8 @@ void main() {
     vec4 barvaVlevo = texture2D(texture, textCoordVlevo);
     if(barvaVlevo.r == 1.0 && barvaVlevo.g == 0.0)
     {
-        barva.r = barvaVlevo.r;
-        barva.g = barvaVlevo.g;
+        barva.r = 0.0;
+        barva.g = 0.5;
     }
 
     //vpravo
@@ -36,8 +36,8 @@ void main() {
     vec4 barvaVpravo = texture2D(texture, textCoordVpravo);
     if(barvaVpravo.r == 0.5 && barvaVpravo.g == 0.0)
     {
-        barva.r = barvaVpravo.r;
-        barva.g = barvaVpravo.g;
+        barva.r = 0.0;
+        barva.g = 1.0;
     }
 
     //dole
@@ -49,8 +49,8 @@ void main() {
     vec4 barvaDole = texture2D(texture, textCoordDole);
     if(barvaDole.r == 0.0 && barvaDole.g == 1.0)
     {
-        barva.r = barvaDole.r;
-        barva.g = barvaDole.g;
+        barva.r = 1.0;
+        barva.g = 0.0;
     }
 
     //nahore
@@ -62,8 +62,8 @@ void main() {
     vec4 barvaNahore = texture2D(texture, textCoordNahore);
     if(barvaNahore.r == 0.0 && barvaNahore.g == 0.5)
     {
-        barva.r = barvaNahore.r;
-        barva.g = barvaNahore.g;
+        barva.r = 0.5;
+        barva.g = 0.0;
     }
 
     }

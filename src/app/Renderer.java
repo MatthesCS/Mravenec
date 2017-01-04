@@ -40,7 +40,7 @@ public class Renderer implements GLEventListener, MouseListener,
 {
 
     int width, height, ox, oy;
-    int pocetBodu, kroku, krokChache;
+    int pocetBodu, kroku, krokChache = -2;
 
     boolean inicializace, stop, jedenKrok;
 
