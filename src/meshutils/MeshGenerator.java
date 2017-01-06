@@ -92,26 +92,26 @@ public class MeshGenerator
                             r = (float) 1.0; //doprava
                             g = (float) 0;
                             b = (float) 0;
-                            a = (float) 1;
+                            a = (float) 0;
                             break;
                         case 1:
-                            r = (float) 0.5; //doleva
-                            g = (float) 0;
+                            r = (float) 0; //doleva
+                            g = (float) 1.0;
                             b = (float) 0;
-                            a = (float) 1;
+                            a = (float) 0;
                             break;
                         case 2:
-                            r = (float) 1.0; //doprava
+                            r = (float) 0; //nahoru
                             g = (float) 0;
-                            b = (float) 0;
-                            a = (float) 1;
+                            b = (float) 1.0;
+                            a = (float) 0;
                             break;
                         case 3:
                         default:
                             r = (float) 0; //dolu
-                            g = (float) 0.5;
+                            g = (float) 0;
                             b = (float) 0;
-                            a = (float) 1;
+                            a = (float) 1.0;
                             break;
                     }
                     mravencu++;
