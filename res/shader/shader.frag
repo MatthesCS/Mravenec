@@ -1,7 +1,7 @@
 #version 150
-in vec3 vertColor;
+in vec4 vertColor;
 out vec4 outColor;
 
 void main() {
-    outColor = vec4(vertColor, 1.0);
+    outColor = vertColor;
 } 
