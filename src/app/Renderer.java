@@ -49,10 +49,10 @@ public class Renderer implements GLEventListener, MouseListener,
     OGLTexture2D.Viewer textureViewer;
     OGLRenderTarget mravenci1, mravenci2;
 
-    OGLBuffers shader, shaderMravenci1, shaderMravenci2;
+    OGLBuffers shaderMravenciInit, shaderMravenci1, shaderMravenci2;
     OGLTextRenderer textRenderer;
 
-    int shader1, shaderLocMat;
+    int shaderMInit, shaderMInitLocMat;
     int shaderM1, shaderM1LocMat, shaderM1LocStop, shaderM1LocDilku;
     int shaderM2, shaderM2LocMat, shaderM2LocStop, shaderM2LocDilku;
 
@@ -70,13 +70,13 @@ public class Renderer implements GLEventListener, MouseListener,
 
         OGLUtils.printOGLparameters(gl);
         OGLUtils.shaderCheck(gl);
-        shader1 = ShaderUtils.loadProgram(gl, "/shader/shader");
+        shaderMInit = ShaderUtils.loadProgram(gl, "/shader/shaderInitMravenci");
         shaderM1 = ShaderUtils.loadProgram(gl, "/shader/shaderMravencovy");
         shaderM2 = ShaderUtils.loadProgram(gl, "/shader/shaderMravencovy");
 
         createBuffers(gl);
 
-        shaderLocMat = gl.glGetUniformLocation(shader1, "mat");
+        shaderMInitLocMat = gl.glGetUniformLocation(shaderMInit, "mat");
         shaderM1LocMat = gl.glGetUniformLocation(shaderM1, "mat");
         shaderM1LocDilku = gl.glGetUniformLocation(shaderM1, "dilku");
         shaderM1LocStop = gl.glGetUniformLocation(shaderM1, "stop");
@@ -102,7 +102,7 @@ public class Renderer implements GLEventListener, MouseListener,
     void createBuffers(GL2 gl)
     {
         //shader = MeshGenerator.createGrid(gl, pocetBodu, "inParamPos");
-        shader = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 10);
+        shaderMravenciInit = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 10);
         shaderMravenci1 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderMravenci2 = MeshGenerator.createGrid(gl, 2, "inParamPos");
     }
@@ -222,20 +222,19 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-        gl.glUseProgram(shader1);
+        gl.glUseProgram(shaderMInit);
         mravenci1.bind();
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-        gl.glUniformMatrix4fv(
-                shaderLocMat,
+        gl.glUniformMatrix4fv(shaderMInitLocMat,
                 1,
                 false,
                 ToFloatArray.convert(cam.getViewMatrix().mul(proj)
                         .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
 
-        shader.draw(GL2.GL_TRIANGLES, shader1);
+        shaderMravenciInit.draw(GL2.GL_TRIANGLES, shaderMInit);
 
         gl.glUseProgram(shaderM1);
 
@@ -367,7 +366,7 @@ public class Renderer implements GLEventListener, MouseListener,
     )
     {
         GL2 gl = glDrawable.getGL().getGL2();
-        gl.glDeleteProgram(shader1);
+        gl.glDeleteProgram(shaderMInit);
     }
 
 }
