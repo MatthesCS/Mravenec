@@ -47,14 +47,16 @@ public class Renderer implements GLEventListener, MouseListener,
     textUtils textUtils;
 
     OGLTexture2D.Viewer textureViewer;
-    OGLRenderTarget mravenci1, mravenci2;
+    OGLRenderTarget mravenci1, mravenci2, pole1, pole2;
 
-    OGLBuffers shaderMravenciInit, shaderMravenci1, shaderMravenci2;
+    OGLBuffers shaderMravenciInit, shaderMravenci1, shaderMravenci2, shaderPole1, shaderPole2;
     OGLTextRenderer textRenderer;
 
     int shaderMInit, shaderMInitLocMat;
     int shaderM1, shaderM1LocMat, shaderM1LocStop, shaderM1LocDilku;
     int shaderM2, shaderM2LocMat, shaderM2LocStop, shaderM2LocDilku;
+    int shaderP1, shaderP1LocMat, shaderP1LocStop, shaderP1LocDilku;
+    int shaderP2, shaderP2LocMat, shaderP2LocStop, shaderP2LocDilku;
 
     Camera cam = new Camera();
     Mat4 proj;
@@ -73,17 +75,28 @@ public class Renderer implements GLEventListener, MouseListener,
         shaderMInit = ShaderUtils.loadProgram(gl, "/shader/shaderInitMravenci");
         shaderM1 = ShaderUtils.loadProgram(gl, "/shader/shaderMravencovy");
         shaderM2 = ShaderUtils.loadProgram(gl, "/shader/shaderMravencovy");
+        shaderP1 = ShaderUtils.loadProgram(gl, "/shader/shaderPole");
+        shaderP2 = ShaderUtils.loadProgram(gl, "/shader/shaderPole");
 
         createBuffers(gl);
 
         shaderMInitLocMat = gl.glGetUniformLocation(shaderMInit, "mat");
+
         shaderM1LocMat = gl.glGetUniformLocation(shaderM1, "mat");
         shaderM1LocDilku = gl.glGetUniformLocation(shaderM1, "dilku");
         shaderM1LocStop = gl.glGetUniformLocation(shaderM1, "stop");
 
-        shaderM2LocMat = gl.glGetUniformLocation(shaderM1, "mat");
-        shaderM2LocDilku = gl.glGetUniformLocation(shaderM1, "dilku");
-        shaderM2LocStop = gl.glGetUniformLocation(shaderM1, "stop");
+        shaderM2LocMat = gl.glGetUniformLocation(shaderM2, "mat");
+        shaderM2LocDilku = gl.glGetUniformLocation(shaderM2, "dilku");
+        shaderM2LocStop = gl.glGetUniformLocation(shaderM2, "stop");
+
+        shaderP1LocMat = gl.glGetUniformLocation(shaderP1, "mat");
+        shaderP1LocDilku = gl.glGetUniformLocation(shaderP1, "dilku");
+        shaderP1LocStop = gl.glGetUniformLocation(shaderP1, "stop");
+
+        shaderP2LocMat = gl.glGetUniformLocation(shaderP2, "mat");
+        shaderP2LocDilku = gl.glGetUniformLocation(shaderP2, "dilku");
+        shaderP2LocStop = gl.glGetUniformLocation(shaderP2, "stop");
 
         cam = cam.withPosition(new Vec3D(5, 5, 2.5))
                 .withAzimuth(Math.PI * 1.25)
@@ -93,6 +106,8 @@ public class Renderer implements GLEventListener, MouseListener,
 
         mravenci1 = new OGLRenderTarget(gl, 200, 200);
         mravenci2 = new OGLRenderTarget(gl, 200, 200);
+        pole1 = new OGLRenderTarget(gl, 200, 200);
+        pole2 = new OGLRenderTarget(gl, 200, 200);
         textureViewer = new OGLTexture2D.Viewer(gl);
 
         textRenderer = new OGLTextRenderer(gl, width, height);
@@ -102,9 +117,11 @@ public class Renderer implements GLEventListener, MouseListener,
     void createBuffers(GL2 gl)
     {
         //shader = MeshGenerator.createGrid(gl, pocetBodu, "inParamPos");
-        shaderMravenciInit = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 10);
+        shaderMravenciInit = MeshGenerator.vytvorGridSMravencemUprostred(gl, pocetBodu, "inParamPos", "inColor");
         shaderMravenci1 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderMravenci2 = MeshGenerator.createGrid(gl, 2, "inParamPos");
+        shaderPole1 = MeshGenerator.createGrid(gl, 2, "inParamPos");
+        shaderPole2 = MeshGenerator.createGrid(gl, 2, "inParamPos");
     }
 
     @Override
@@ -112,8 +129,6 @@ public class Renderer implements GLEventListener, MouseListener,
     {
 
         GL2 gl = glDrawable.getGL().getGL2();
-
-        
 
         if (!stop)
         {
@@ -130,7 +145,7 @@ public class Renderer implements GLEventListener, MouseListener,
             krokChache--;
             stop = true;
         }
-        
+
         if (kroku == 0)
         {
             inicializace(glDrawable);
