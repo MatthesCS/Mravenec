@@ -71,8 +71,8 @@ public class Renderer implements GLEventListener, MouseListener,
         OGLUtils.printOGLparameters(gl);
         OGLUtils.shaderCheck(gl);
         shader1 = ShaderUtils.loadProgram(gl, "/shader/shader");
-        shaderM1 = ShaderUtils.loadProgram(gl, "/shader/shaderTexturovy");
-        shaderM2 = ShaderUtils.loadProgram(gl, "/shader/shaderTexturovy");
+        shaderM1 = ShaderUtils.loadProgram(gl, "/shader/shaderMravencovy");
+        shaderM2 = ShaderUtils.loadProgram(gl, "/shader/shaderMravencovy");
 
         createBuffers(gl);
 
