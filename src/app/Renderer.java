@@ -120,7 +120,6 @@ public class Renderer implements GLEventListener, MouseListener,
 
     void createBuffers(GL2 gl)
     {
-        //shader = MeshGenerator.createGrid(gl, pocetBodu, "inParamPos");
         shaderMravenciInit = MeshGenerator.vytvorGridSMravencemUprostred(gl, pocetBodu, "inParamPos", "inColor");
         shaderMravenci1 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderMravenci2 = MeshGenerator.createGrid(gl, 2, "inParamPos");
@@ -151,7 +150,6 @@ public class Renderer implements GLEventListener, MouseListener,
         if (kroku == 0)
         {
             inicializace(glDrawable);
-            pole2 = pole1;
         } else if (kroku % 2 == 1)
         {
             licha(glDrawable);
@@ -195,6 +193,24 @@ public class Renderer implements GLEventListener, MouseListener,
         mravenci2.getColorTexture().bind(shaderM2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderM2, "texturaPole", 1);
         shaderMravenci2.draw(GL2.GL_TRIANGLES, shaderM2);
+        
+        gl.glUseProgram(shaderP2);
+        pole1.bind();
+
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
+        gl.glUniformMatrix4fv(shaderP2LocMat,
+                1,
+                false,
+                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
+                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
+        gl.glUniform1f(shaderP2LocDilku, (float) pocetBodu - 1);
+        gl.glUniform1f(shaderP2LocStop, s);
+
+        mravenci2.getColorTexture().bind(shaderP2, "texturaMravenci", 0);
+        pole2.getColorTexture().bind(shaderP2, "texturaPole", 1);
+        shaderPole2.draw(GL2.GL_TRIANGLES, shaderP2);
 
         gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
         gl.glViewport(0, 0, width, height);
@@ -229,6 +245,24 @@ public class Renderer implements GLEventListener, MouseListener,
         mravenci1.getColorTexture().bind(shaderM1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderM1, "texturaPole", 1);
         shaderMravenci1.draw(GL2.GL_TRIANGLES, shaderM1);
+        
+        gl.glUseProgram(shaderP1);
+        pole2.bind();
+
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
+        gl.glUniformMatrix4fv(shaderP1LocMat,
+                1,
+                false,
+                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
+                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
+        gl.glUniform1f(shaderP1LocDilku, (float) pocetBodu - 1);
+        gl.glUniform1f(shaderP1LocStop, s);
+
+        mravenci1.getColorTexture().bind(shaderP1, "texturaMravenci", 0);
+        pole1.getColorTexture().bind(shaderP1, "texturaPole", 1);
+        shaderPole1.draw(GL2.GL_TRIANGLES, shaderP1);
 
         gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
         gl.glViewport(0, 0, width, height);
