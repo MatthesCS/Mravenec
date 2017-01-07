@@ -6,6 +6,7 @@
 package appUtils;
 
 import com.jogamp.opengl.GLAutoDrawable;
+import java.awt.Color;
 import oglutils.OGLTextRenderer;
 
 /**
@@ -16,9 +17,10 @@ public class textUtils
 {
     OGLTextRenderer textRenderer;
 
-    public textUtils(OGLTextRenderer textRenderer, int width, int height, GLAutoDrawable glDraw)
+    public textUtils(OGLTextRenderer textRenderer)
     {
         this.textRenderer = textRenderer;
+        this.textRenderer.setColor(Color.BLUE);
     }
     
      public void vypisTextOvládání()
