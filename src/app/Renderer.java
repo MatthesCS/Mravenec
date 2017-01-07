@@ -52,12 +52,12 @@ public class Renderer implements GLEventListener, MouseListener,
     OGLBuffers shaderMravenciInit, shaderMravenci1, shaderMravenci2, shaderPoleInit, shaderPole1, shaderPole2;
     OGLTextRenderer textRenderer;
 
-    int shaderMInit, shaderMInitLocMat;
-    int shaderM1, shaderM1LocMat, shaderM1LocStop, shaderM1LocDilku;
-    int shaderM2, shaderM2LocMat, shaderM2LocStop, shaderM2LocDilku;
-    int shaderPInit, shaderPInitLocMat;
-    int shaderP1, shaderP1LocMat, shaderP1LocStop, shaderP1LocDilku;
-    int shaderP2, shaderP2LocMat, shaderP2LocStop, shaderP2LocDilku;
+    int shaderMInit;
+    int shaderM1, shaderM1LocStop, shaderM1LocDilku;
+    int shaderM2, shaderM2LocStop, shaderM2LocDilku;
+    int shaderPInit;
+    int shaderP1, shaderP1LocStop;
+    int shaderP2, shaderP2LocStop;
 
     Camera cam = new Camera();
     Mat4 proj;
@@ -68,7 +68,7 @@ public class Renderer implements GLEventListener, MouseListener,
         inicializace = true;
         stop = true;
         kroku = 0;
-        pocetBodu = 10;
+        pocetBodu = 100;
         GL2 gl = glDrawable.getGL().getGL2();
 
         OGLUtils.printOGLparameters(gl);
@@ -82,24 +82,14 @@ public class Renderer implements GLEventListener, MouseListener,
 
         createBuffers(gl);
 
-        shaderMInitLocMat = gl.glGetUniformLocation(shaderMInit, "mat");
-
-        shaderM1LocMat = gl.glGetUniformLocation(shaderM1, "mat");
         shaderM1LocDilku = gl.glGetUniformLocation(shaderM1, "dilku");
         shaderM1LocStop = gl.glGetUniformLocation(shaderM1, "stop");
-
-        shaderM2LocMat = gl.glGetUniformLocation(shaderM2, "mat");
+        
         shaderM2LocDilku = gl.glGetUniformLocation(shaderM2, "dilku");
         shaderM2LocStop = gl.glGetUniformLocation(shaderM2, "stop");
-        
-        shaderPInitLocMat = gl.glGetUniformLocation(shaderPInit, "mat");
 
-        shaderP1LocMat = gl.glGetUniformLocation(shaderP1, "mat");
-        shaderP1LocDilku = gl.glGetUniformLocation(shaderP1, "dilku");
         shaderP1LocStop = gl.glGetUniformLocation(shaderP1, "stop");
 
-        shaderP2LocMat = gl.glGetUniformLocation(shaderP2, "mat");
-        shaderP2LocDilku = gl.glGetUniformLocation(shaderP2, "dilku");
         shaderP2LocStop = gl.glGetUniformLocation(shaderP2, "stop");
 
         cam = cam.withPosition(new Vec3D(5, 5, 2.5))
@@ -157,12 +147,15 @@ public class Renderer implements GLEventListener, MouseListener,
         {
             suda(glDrawable);
         }
-
+        
+        textureViewer.view(pole1.getColorTexture(), -1, -1, 2);
+        /*
         textureViewer.view(mravenci1.getColorTexture(), -1, -1, 0.99);
         textureViewer.view(pole1.getColorTexture(), -1, 0.01, 0.99);
         textureViewer.view(mravenci2.getColorTexture(), 0.01, 0.01, 0.99);
-        textureViewer.view(pole1.getColorTexture(), 0.01, -1, 0.99);
+        textureViewer.view(pole1.getColorTexture(), 0.01, -1, 0.99);*/
 
+        System.out.println(kroku);
         textUtils.vypisCopyrightaKroky(kroku);
         textUtils.vypisTextOvládání();
     }
@@ -176,12 +169,7 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
-        gl.glUniformMatrix4fv(shaderM2LocMat,
-                1,
-                false,
-                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
-                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
+        
         gl.glUniform1f(shaderM2LocDilku, (float) pocetBodu - 1);
         float s = (float) 0.0;
         if (stop)
@@ -193,19 +181,13 @@ public class Renderer implements GLEventListener, MouseListener,
         mravenci2.getColorTexture().bind(shaderM2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderM2, "texturaPole", 1);
         shaderMravenci2.draw(GL2.GL_TRIANGLES, shaderM2);
-        
+
         gl.glUseProgram(shaderP2);
         pole1.bind();
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
-        gl.glUniformMatrix4fv(shaderP2LocMat,
-                1,
-                false,
-                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
-                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
-        gl.glUniform1f(shaderP2LocDilku, (float) pocetBodu - 1);
+        
         gl.glUniform1f(shaderP2LocStop, s);
 
         mravenci2.getColorTexture().bind(shaderP2, "texturaMravenci", 0);
@@ -228,12 +210,7 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
-        gl.glUniformMatrix4fv(shaderM1LocMat,
-                1,
-                false,
-                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
-                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
+        
         gl.glUniform1f(shaderM1LocDilku, (float) pocetBodu - 1);
         float s = (float) 0.0;
         if (stop)
@@ -245,19 +222,13 @@ public class Renderer implements GLEventListener, MouseListener,
         mravenci1.getColorTexture().bind(shaderM1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderM1, "texturaPole", 1);
         shaderMravenci1.draw(GL2.GL_TRIANGLES, shaderM1);
-        
+
         gl.glUseProgram(shaderP1);
         pole2.bind();
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
-        gl.glUniformMatrix4fv(shaderP1LocMat,
-                1,
-                false,
-                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
-                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
-        gl.glUniform1f(shaderP1LocDilku, (float) pocetBodu - 1);
+        
         gl.glUniform1f(shaderP1LocStop, s);
 
         mravenci1.getColorTexture().bind(shaderP1, "texturaMravenci", 0);
@@ -284,12 +255,6 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-        gl.glUniformMatrix4fv(shaderMInitLocMat,
-                1,
-                false,
-                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
-                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
-
         shaderMravenciInit.draw(GL2.GL_TRIANGLES, shaderMInit);
 
         gl.glUseProgram(shaderPInit);
@@ -297,12 +262,6 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
-        gl.glUniformMatrix4fv(shaderPInitLocMat,
-                1,
-                false,
-                ToFloatArray.convert(cam.getViewMatrix().mul(proj)
-                        .mul(new Mat4Scale((double) width / height, 1, 1))), 0);
 
         shaderPoleInit.draw(GL2.GL_TRIANGLES, shaderPInit);
 
@@ -430,11 +389,15 @@ public class Renderer implements GLEventListener, MouseListener,
     }
 
     @Override
-    public void dispose(GLAutoDrawable glDrawable
-    )
+    public void dispose(GLAutoDrawable glDrawable)
     {
         GL2 gl = glDrawable.getGL().getGL2();
         gl.glDeleteProgram(shaderMInit);
+        gl.glDeleteProgram(shaderM1);
+        gl.glDeleteProgram(shaderM2);
+        gl.glDeleteProgram(shaderPInit);
+        gl.glDeleteProgram(shaderP1);
+        gl.glDeleteProgram(shaderP2);
     }
 
 }

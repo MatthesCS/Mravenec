@@ -3,7 +3,6 @@ in vec2 textCoord;
 out vec4 outColor;
 uniform sampler2D texturaMravenci;
 uniform sampler2D texturaPole;
-uniform float dilku;
 uniform float stop;
 
 //zjistí, jestli je na souřadnici mravenec, pokud ano, vrací true

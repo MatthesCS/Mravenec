@@ -2,7 +2,6 @@
 in vec2 inParamPos;
 in vec4 inColor;
 out vec4 vertColor;
-uniform mat4 mat;
 
 vec3 surface(vec2 paramPos)
 {
