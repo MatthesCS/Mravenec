@@ -16,7 +16,6 @@ import oglutils.OGLBuffers;
 import oglutils.OGLTextRenderer;
 import oglutils.OGLUtils;
 import oglutils.ShaderUtils;
-import oglutils.ToFloatArray;
 import transforms.Camera;
 import transforms.Mat4;
 import transforms.Mat4PerspRH;
@@ -24,7 +23,6 @@ import transforms.Vec3D;
 import appUtils.textUtils;
 import oglutils.OGLRenderTarget;
 import oglutils.OGLTexture2D;
-import transforms.Mat4Scale;
 
 /**
  * GLSL sample:<br/>
@@ -40,9 +38,9 @@ public class Renderer implements GLEventListener, MouseListener,
 {
 
     int width, height, ox, oy;
-    int pocetBodu, kroku, krokChache = -2;
+    int pocetBodu, barevneSchema, kroku, krokChache = -2;
 
-    boolean inicializace, stop, jedenKrok;
+    boolean inicializace, stop, jedenKrok, popisSchematu;
 
     textUtils textUtils;
 
@@ -53,11 +51,11 @@ public class Renderer implements GLEventListener, MouseListener,
     OGLTextRenderer textRenderer;
 
     int shaderMInit;
-    int shaderM1, shaderM1LocStop, shaderM1LocDilku;
-    int shaderM2, shaderM2LocStop, shaderM2LocDilku;
+    int shaderM1, shaderM1LocStop, shaderM1LocDilku, shaderM1LocSchema;
+    int shaderM2, shaderM2LocStop, shaderM2LocDilku, shaderM2LocSchema;
     int shaderPInit;
-    int shaderP1, shaderP1LocStop;
-    int shaderP2, shaderP2LocStop;
+    int shaderP1, shaderP1LocStop, shaderP1LocSchema;
+    int shaderP2, shaderP2LocStop, shaderP2LocSchema;
 
     Camera cam = new Camera();
     Mat4 proj;
@@ -67,8 +65,10 @@ public class Renderer implements GLEventListener, MouseListener,
     {
         inicializace = true;
         stop = true;
+        popisSchematu = false;
         kroku = 0;
         pocetBodu = 100;
+        barevneSchema = 0;
         GL2 gl = glDrawable.getGL().getGL2();
 
         OGLUtils.printOGLparameters(gl);
@@ -84,13 +84,17 @@ public class Renderer implements GLEventListener, MouseListener,
 
         shaderM1LocDilku = gl.glGetUniformLocation(shaderM1, "dilku");
         shaderM1LocStop = gl.glGetUniformLocation(shaderM1, "stop");
-        
+        shaderM1LocSchema = gl.glGetUniformLocation(shaderM1, "schema");
+
         shaderM2LocDilku = gl.glGetUniformLocation(shaderM2, "dilku");
         shaderM2LocStop = gl.glGetUniformLocation(shaderM2, "stop");
+        shaderM2LocSchema = gl.glGetUniformLocation(shaderM2, "schema");
 
         shaderP1LocStop = gl.glGetUniformLocation(shaderP1, "stop");
+        shaderP1LocSchema = gl.glGetUniformLocation(shaderP1, "schema");
 
         shaderP2LocStop = gl.glGetUniformLocation(shaderP2, "stop");
+        shaderP2LocSchema = gl.glGetUniformLocation(shaderP2, "schema");
 
         cam = cam.withPosition(new Vec3D(5, 5, 2.5))
                 .withAzimuth(Math.PI * 1.25)
@@ -111,6 +115,7 @@ public class Renderer implements GLEventListener, MouseListener,
     void createBuffers(GL2 gl)
     {
         shaderMravenciInit = MeshGenerator.vytvorGridSMravencemUprostred(gl, pocetBodu, "inParamPos", "inColor");
+        //shaderMravenciInit = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 5);
         shaderMravenci1 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderMravenci2 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderPoleInit = MeshGenerator.vytvorGridMravencu(gl, 2, "inParamPos", "inColor", 0);
@@ -147,7 +152,7 @@ public class Renderer implements GLEventListener, MouseListener,
         {
             suda(glDrawable);
         }
-        
+
         textureViewer.view(pole1.getColorTexture(), -1, -1, 2);
         /*
         textureViewer.view(mravenci1.getColorTexture(), -1, -1, 0.99);
@@ -158,6 +163,7 @@ public class Renderer implements GLEventListener, MouseListener,
         System.out.println(kroku);
         textUtils.vypisCopyrightaKroky(kroku);
         textUtils.vypisTextOvládání();
+        textUtils.vypisTextSchéma(barevneSchema, popisSchematu);
     }
 
     void suda(GLAutoDrawable glDrawable)
@@ -169,7 +175,7 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        
+
         gl.glUniform1f(shaderM2LocDilku, (float) pocetBodu - 1);
         float s = (float) 0.0;
         if (stop)
@@ -177,6 +183,7 @@ public class Renderer implements GLEventListener, MouseListener,
             s = (float) 1.0;
         }
         gl.glUniform1f(shaderM2LocStop, s);
+        gl.glUniform1i(shaderM2LocSchema, barevneSchema);
 
         mravenci2.getColorTexture().bind(shaderM2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderM2, "texturaPole", 1);
@@ -187,8 +194,9 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        
+
         gl.glUniform1f(shaderP2LocStop, s);
+        gl.glUniform1i(shaderP2LocSchema, barevneSchema);
 
         mravenci2.getColorTexture().bind(shaderP2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderP2, "texturaPole", 1);
@@ -210,7 +218,7 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        
+
         gl.glUniform1f(shaderM1LocDilku, (float) pocetBodu - 1);
         float s = (float) 0.0;
         if (stop)
@@ -218,6 +226,7 @@ public class Renderer implements GLEventListener, MouseListener,
             s = (float) 1.0;
         }
         gl.glUniform1f(shaderM1LocStop, s);
+        gl.glUniform1i(shaderM1LocSchema, barevneSchema);
 
         mravenci1.getColorTexture().bind(shaderM1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderM1, "texturaPole", 1);
@@ -228,8 +237,9 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        
+
         gl.glUniform1f(shaderP1LocStop, s);
+        gl.glUniform1i(shaderP1LocSchema, barevneSchema);
 
         mravenci1.getColorTexture().bind(shaderP1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderP1, "texturaPole", 1);
@@ -333,6 +343,16 @@ public class Renderer implements GLEventListener, MouseListener,
     {
         switch (e.getKeyCode())
         {
+            case KeyEvent.VK_NUMPAD0:
+                barevneSchema++;
+                if (barevneSchema > 3)
+                {
+                    barevneSchema = 0;
+                }
+                break;
+            case KeyEvent.VK_NUMPAD1:
+                popisSchematu = !popisSchematu;
+                break;
             case KeyEvent.VK_M:
                 stop = !stop;
                 break;

@@ -4,6 +4,7 @@ out vec4 outColor;
 uniform sampler2D texturaMravenci;
 uniform sampler2D texturaPole;
 uniform float stop;
+uniform int schema;
 
 //zjistí, jestli je na souřadnici mravenec, pokud ano, vrací true
 int isMravenec(vec2 coord)
@@ -33,9 +34,7 @@ int isMravenec(vec2 coord)
 }
 
 /*
-    vrací novou barvu pole
-    bílá = zelená
-    zelená = bílá
+    vrací novou barvu pole a schématu
 */
 vec4 novaBarva(vec4 barva)
 {
@@ -49,10 +48,56 @@ vec4 novaBarva(vec4 barva)
     }
     else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3)
     {
-        nBarva.r = 1.0;
-        nBarva.g = 1.0;
-        nBarva.b = 1.0;
-        nBarva.a = 1.0;
+        if(schema == 0)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+        else if(schema > 0)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 0.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.8)
+    {
+        if(schema > 0 && schema < 3)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+        else {
+            nBarva.r = 1.0;
+            nBarva.g = 0.0;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b <= 0.3)
+    {
+        if(schema >= 3)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)
+    {
+        if(schema >= 3)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
     }
 
     return nBarva;

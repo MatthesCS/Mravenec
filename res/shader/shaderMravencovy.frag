@@ -5,11 +5,10 @@ uniform sampler2D texturaMravenci;
 uniform sampler2D texturaPole;
 uniform float dilku;
 uniform float stop;
+uniform int schema;
 
 /*
-    otočí mravence podle barvy pole
-    bílá = doprava
-    zelená = doleva
+    otočí mravence podle barvy pole a schématu
     směr mravence
     1 = doprava
     2 = doleva
@@ -22,40 +21,154 @@ int otocMravence(int smer, vec2 coord)
     vec4 barva = texture2D(texturaPole, coord);
     if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b >= 0.8)
     {
-        if(smer == 1)
-        {
-            novySmer = 4;
-        }
-        else if(smer == 2)
-        {
-            novySmer = 3;
-        }
-        else if(smer == 3)
-        {
-            novySmer = 1;
-        }
-        else if(smer == 4)
-        {
-            novySmer = 2;
-        }
+        //doprava
+            if(smer == 1)
+            {
+                novySmer = 4;
+            }
+            else if(smer == 2)
+            {
+                novySmer = 3;
+            }
+            else if(smer == 3)
+            {
+                novySmer = 1;
+            }
+            else if(smer == 4)
+            {
+                novySmer = 2;
+            }
     }
     else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3)
     {
-        if(smer == 1)
+        if(schema == 0 || schema == 2)
         {
-            novySmer = 3;
+            //doleva
+            if(smer == 1)
+            {
+                novySmer = 3;
+            }
+            else if(smer == 2)
+            {
+                novySmer = 4;
+            }
+            else if(smer == 3)
+            {
+                novySmer = 2;
+            }
+            else if(smer == 4)
+            {
+                novySmer = 1;
+            }
         }
-        else if(smer == 2)
+        else if(schema == 1 || schema == 3)
         {
-            novySmer = 4;
+            //doprava
+            if(smer == 1)
+            {
+                novySmer = 4;
+            }
+            else if(smer == 2)
+            {
+                novySmer = 3;
+            }
+            else if(smer == 3)
+            {
+                novySmer = 1;
+            }
+            else if(smer == 4)
+            {
+                novySmer = 2;
+            }
         }
-        else if(smer == 3)
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.8)
+    {
+        if(schema == 1 || schema == 2)
         {
-            novySmer = 2;
+            //doleva
+            if(smer == 1)
+            {
+                novySmer = 3;
+            }
+            else if(smer == 2)
+            {
+                novySmer = 4;
+            }
+            else if(smer == 3)
+            {
+                novySmer = 2;
+            }
+            else if(smer == 4)
+            {
+                novySmer = 1;
+            }
         }
-        else if(smer == 4)
+        else if(schema == 3)
         {
-            novySmer = 1;
+            //doprava
+            if(smer == 1)
+            {
+                novySmer = 4;
+            }
+            else if(smer == 2)
+            {
+                novySmer = 3;
+            }
+            else if(smer == 3)
+            {
+                novySmer = 1;
+            }
+            else if(smer == 4)
+            {
+                novySmer = 2;
+            }
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b <= 0.3)
+    {
+        if(schema == 3)
+        {
+            //doleva
+            if(smer == 1)
+            {
+                novySmer = 3;
+            }
+            else if(smer == 2)
+            {
+                novySmer = 4;
+            }
+            else if(smer == 3)
+            {
+                novySmer = 2;
+            }
+            else if(smer == 4)
+            {
+                novySmer = 1;
+            }
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)
+    {
+        if(schema == 3)
+        {
+            //doprava
+            if(smer == 1)
+            {
+                novySmer = 4;
+            }
+            else if(smer == 2)
+            {
+                novySmer = 3;
+            }
+            else if(smer == 3)
+            {
+                novySmer = 1;
+            }
+            else if(smer == 4)
+            {
+                novySmer = 2;
+            }
         }
     }
     return novySmer;
