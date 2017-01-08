@@ -115,7 +115,7 @@ public class Renderer implements GLEventListener, MouseListener,
     void createBuffers(GL2 gl)
     {
         shaderMravenciInit = MeshGenerator.vytvorGridSMravencemUprostred(gl, pocetBodu, "inParamPos", "inColor");
-        //shaderMravenciInit = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 5);
+        //shaderMravenciInit = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 15);
         shaderMravenci1 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderMravenci2 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderPoleInit = MeshGenerator.vytvorGridMravencu(gl, 2, "inParamPos", "inColor", 0);
@@ -154,8 +154,8 @@ public class Renderer implements GLEventListener, MouseListener,
         }
 
         textureViewer.view(pole1.getColorTexture(), -1, -1, 2);
-        /*
-        textureViewer.view(mravenci1.getColorTexture(), -1, -1, 0.99);
+        
+        /*textureViewer.view(mravenci1.getColorTexture(), -1, -1, 0.99);
         textureViewer.view(pole1.getColorTexture(), -1, 0.01, 0.99);
         textureViewer.view(mravenci2.getColorTexture(), 0.01, 0.01, 0.99);
         textureViewer.view(pole1.getColorTexture(), 0.01, -1, 0.99);*/

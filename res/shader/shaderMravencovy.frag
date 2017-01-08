@@ -7,6 +7,52 @@ uniform float dilku;
 uniform float stop;
 uniform int schema;
 
+// otočí směr doleva
+int otocDoleva(int smer)
+{
+    int novySmer = 0;
+    if(smer == 1)
+    {
+        novySmer = 3;
+    }
+    else if(smer == 2)
+    {
+        novySmer = 4;
+    }
+    else if(smer == 3)
+    {
+        novySmer = 2;
+    }
+    else if(smer == 4)
+    {
+        novySmer = 1;
+    }
+    return novySmer;
+}
+
+//otočí směr doprava
+int otocDoprava(int smer)
+{
+    int novySmer = 0;
+    if(smer == 1)
+    {
+        novySmer = 4;
+    }
+    else if(smer == 2)
+    {
+        novySmer = 3;
+    }
+    else if(smer == 3)
+    {
+        novySmer = 1;
+    }
+    else if(smer == 4)
+    {
+        novySmer = 2;
+    }
+    return novySmer;
+}
+
 /*
     otočí mravence podle barvy pole a schématu
     směr mravence
@@ -21,154 +67,42 @@ int otocMravence(int smer, vec2 coord)
     vec4 barva = texture2D(texturaPole, coord);
     if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b >= 0.8)
     {
-        //doprava
-            if(smer == 1)
-            {
-                novySmer = 4;
-            }
-            else if(smer == 2)
-            {
-                novySmer = 3;
-            }
-            else if(smer == 3)
-            {
-                novySmer = 1;
-            }
-            else if(smer == 4)
-            {
-                novySmer = 2;
-            }
+        novySmer = otocDoprava(smer);
     }
     else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3)
     {
         if(schema == 0 || schema == 2)
         {
-            //doleva
-            if(smer == 1)
-            {
-                novySmer = 3;
-            }
-            else if(smer == 2)
-            {
-                novySmer = 4;
-            }
-            else if(smer == 3)
-            {
-                novySmer = 2;
-            }
-            else if(smer == 4)
-            {
-                novySmer = 1;
-            }
+            novySmer = otocDoleva(smer);
         }
         else if(schema == 1 || schema == 3)
         {
-            //doprava
-            if(smer == 1)
-            {
-                novySmer = 4;
-            }
-            else if(smer == 2)
-            {
-                novySmer = 3;
-            }
-            else if(smer == 3)
-            {
-                novySmer = 1;
-            }
-            else if(smer == 4)
-            {
-                novySmer = 2;
-            }
+            novySmer = otocDoprava(smer);
         }
     }
     else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.8)
     {
         if(schema == 1 || schema == 2)
         {
-            //doleva
-            if(smer == 1)
-            {
-                novySmer = 3;
-            }
-            else if(smer == 2)
-            {
-                novySmer = 4;
-            }
-            else if(smer == 3)
-            {
-                novySmer = 2;
-            }
-            else if(smer == 4)
-            {
-                novySmer = 1;
-            }
+            novySmer = otocDoleva(smer);
         }
         else if(schema == 3)
         {
-            //doprava
-            if(smer == 1)
-            {
-                novySmer = 4;
-            }
-            else if(smer == 2)
-            {
-                novySmer = 3;
-            }
-            else if(smer == 3)
-            {
-                novySmer = 1;
-            }
-            else if(smer == 4)
-            {
-                novySmer = 2;
-            }
+            novySmer = otocDoprava(smer);
         }
     }
     else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b <= 0.3)
     {
         if(schema == 3)
         {
-            //doleva
-            if(smer == 1)
-            {
-                novySmer = 3;
-            }
-            else if(smer == 2)
-            {
-                novySmer = 4;
-            }
-            else if(smer == 3)
-            {
-                novySmer = 2;
-            }
-            else if(smer == 4)
-            {
-                novySmer = 1;
-            }
+            novySmer = otocDoleva(smer);
         }
     }
     else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)
     {
         if(schema == 3)
         {
-            //doprava
-            if(smer == 1)
-            {
-                novySmer = 4;
-            }
-            else if(smer == 2)
-            {
-                novySmer = 3;
-            }
-            else if(smer == 3)
-            {
-                novySmer = 1;
-            }
-            else if(smer == 4)
-            {
-                novySmer = 2;
-            }
+            novySmer = otocDoprava(smer);
         }
     }
     return novySmer;
