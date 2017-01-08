@@ -3,10 +3,14 @@ in vec2 textCoord;
 out vec4 outColor;
 uniform sampler2D texturaMravenci;
 uniform sampler2D texturaPole;
+uniform vec4 ins1;
+uniform vec4 ins2;
+uniform vec4 ins3;
+uniform vec4 ins4;
 uniform float stop;
 uniform int schema;
 
-//zjistí, jestli je na souřadnici mravenec, pokud ano, vrací true
+//zjistí, jestli je na souřadnici mravenec, pokud ano, vrací 1
 int isMravenec(vec2 coord)
 {
     vec4 barva = texture2D(texturaMravenci, coord);
@@ -35,60 +39,75 @@ int isMravenec(vec2 coord)
 
 /*
     vrací novou barvu pole a schématu
+    postup barev:
+    bílá -> červená -> zelená -> modrá -> žlutá -> fialová -> tyrkysová -> černá -> tmavě červená ->
+    tmavě želená -> tmavě modrá -> tmavě žlutá -> tmavě fialová -> tmavě tyrkysová -> šedá -> 
+    oranžová -> bílá
 */
 vec4 novaBarva(vec4 barva)
 {
     vec4 nBarva = barva;
     if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b >= 0.8)  //bílá
     {
-        nBarva.r = 0.0;
-        nBarva.g = 1.0;
-        nBarva.b = 0.0;
-        nBarva.a = 1.0;
-    }
-    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3)  //zelená
-    {
-        if(schema == 0 || schema == 8)
+        if(ins1.y != 0)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 0.0;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+        else
         {
             nBarva.r = 1.0;
             nBarva.g = 1.0;
             nBarva.b = 1.0;
             nBarva.a = 1.0;
         }
-        else if(schema > 0)
+    }
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b <= 0.3)  //červená
+    {
+        if(ins1.z != 0)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 1.0;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3)  //zelená
+    {
+        if(ins1.w != 0)
         {
             nBarva.r = 0.0;
             nBarva.g = 0.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
             nBarva.b = 1.0;
             nBarva.a = 1.0;
         }
     }
     else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.8)  //modrá
     {
-        if(schema > 0 && schema < 3)
-        {
-            nBarva.r = 1.0;
-            nBarva.g = 1.0;
-            nBarva.b = 1.0;
-            nBarva.a = 1.0;
-        }
-        else {
-            nBarva.r = 1.0;
-            nBarva.g = 0.0;
-            nBarva.b = 0.0;
-            nBarva.a = 1.0;
-        }
-    }
-    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b <= 0.3)  //červená
-    {
-        if((schema >= 3 && schema < 6) || schema > 8)
+        if(ins2.x != 0)
         {
             nBarva.r = 1.0;
             nBarva.g = 1.0;
             nBarva.b = 0.0;
             nBarva.a = 1.0;
         }
-        else if (schema == 6 || schema == 7)
+        else
         {
             nBarva.r = 1.0;
             nBarva.g = 1.0;
@@ -96,53 +115,50 @@ vec4 novaBarva(vec4 barva)
             nBarva.a = 1.0;
         }
     }
-    else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)  //žlutá
+    else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b  <= 0.3)  //žlutá
     {
-        if(schema == 3)
-        {
-            nBarva.r = 1.0;
-            nBarva.g = 1.0;
-            nBarva.b = 1.0;
-            nBarva.a = 1.0;
-        }
-        else if(schema > 3)
+        if(ins2.y != 0)
         {
             nBarva.r = 1.0;
             nBarva.g = 0.0;
             nBarva.b = 1.0;
             nBarva.a = 1.0;
         }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
     }
-    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b >= 0.8)  //fialová
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b  >= 0.8)  //fialová
     {
-        if(schema >= 4)
+        if(ins2.z != 0)
         {
             nBarva.r = 0.0;
             nBarva.g = 1.0;
             nBarva.b = 1.0;
             nBarva.a = 1.0;
         }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
     }
-    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b >= 0.8)  //tyrkysová
+    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b  >= 0.8)  //tyrkysová
     {
-        if(schema >= 4)
+        if(ins2.w != 0)
         {
             nBarva.r = 0.0;
             nBarva.g = 0.0;
             nBarva.b = 0.0;
             nBarva.a = 1.0;
         }
-    }
-    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b <= 0.3)  //černá
-    {
-        if((schema >= 4 && schema < 9) || schema > 10)
-        {
-            nBarva.r = 0.0;
-            nBarva.g = 0.5;
-            nBarva.b = 0.0;
-            nBarva.a = 1.0;
-        }
-        if(schema >= 9)
+        else
         {
             nBarva.r = 1.0;
             nBarva.g = 1.0;
@@ -150,54 +166,118 @@ vec4 novaBarva(vec4 barva)
             nBarva.a = 1.0;
         }
     }
-    else if(barva.r <= 0.3 && barva.g >= 0.3 && barva.g <= 0.6 && barva.b <= 0.3)  //tmavě zelená
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b  <= 0.3)  //černá
     {
-        if(schema == 4 || schema == 11)
-        {
-            nBarva.r = 1.0;
-            nBarva.g = 1.0;
-            nBarva.b = 1.0;
-            nBarva.a = 1.0;
-        }
-        else if(schema >= 5)
+        if(ins3.x != 0)
         {
             nBarva.r = 0.5;
             nBarva.g = 0.0;
             nBarva.b = 0.0;
             nBarva.a = 1.0;
         }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
     }
-    else if(barva.r >= 0.3 && barva.r <= 0.6 && barva.g <= 0.3 && barva.b <= 0.3)//tmavě červená
+    else if(barva.r >= 0.3 && barva.r <= 0.7 && barva.g <= 0.3 && barva.b  <= 0.3)  //tmavě červená
     {
-        if(schema >= 5)
+        if(ins3.y != 0)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 0.5;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g >= 0.3 && barva.g <= 0.7 && barva.b  <= 0.3)  //tmavě zelená
+    {
+        if(ins3.z != 0)
         {
             nBarva.r = 0.0;
             nBarva.g = 0.0;
             nBarva.b = 0.5;
             nBarva.a = 1.0;
         }
-    }
-    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.3 && barva.b <= 0.6)  //tmavě modrá
-    {
-        if(schema >= 5 && schema < 13)
+        else
         {
             nBarva.r = 1.0;
             nBarva.g = 1.0;
             nBarva.b = 1.0;
             nBarva.a = 1.0;
         }
-        else if(schema == 13)
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.3 && barva.b  <= 0.7)  //tmavě modrá
+    {
+        if(ins3.w != 0)
+        {
+            nBarva.r = 0.5;
+            nBarva.g = 0.5;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r >= 0.3 && barva.r <= 0.7 && barva.g >= 0.3 && barva.g <= 0.7 && barva.b  <= 0.3) //tmavě žlutá
+    {
+        if(ins4.x != 0)
+        {
+            nBarva.r = 0.5;
+            nBarva.g = 0.0;
+            nBarva.b = 0.5;
+            nBarva.a = 1.0;
+        }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r >= 0.3 && barva.r <= 0.7 && barva.g <= 0.3 && barva.b >= 0.3 && barva.b  <= 0.7) //tmavě fialová
+    {
+        if(ins4.y != 0)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 0.5;
+            nBarva.b = 0.5;
+            nBarva.a = 1.0;
+        }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g >= 0.3 && barva.g <= 0.7 && barva.b >= 0.3 && barva.b  <= 0.7) //tmavě tyrkysová
+    {
+        if(ins4.z != 0)
         {
             nBarva.r = 0.5;
             nBarva.g = 0.5;
             nBarva.b = 0.5;
             nBarva.a = 1.0;
         }
-    }
-    else if(barva.r >= 0.3 && barva.r <= 0.6 && barva.g >= 0.3 && barva.g <= 0.6 
-    && barva.b >= 0.3 && barva.b <= 0.6)  //šedá
-    {
-        if(schema == 13)
+        else
         {
             nBarva.r = 1.0;
             nBarva.g = 1.0;
@@ -205,7 +285,31 @@ vec4 novaBarva(vec4 barva)
             nBarva.a = 1.0;
         }
     }
-
+    else if(barva.r >= 0.3 && barva.r <= 0.7 && barva.g >= 0.3 && barva.g <= 0.7 && barva.b >= 0.3 && barva.b  <= 0.7) //šedá
+    {
+        if(ins4.w != 0)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 0.5;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+        else
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g >= 0.3 && barva.g <= 0.7 && barva.b <= 0.3) //oranžová
+    {
+        nBarva.r = 1.0;
+        nBarva.g = 1.0;
+        nBarva.b = 1.0;
+        nBarva.a = 1.0;
+    }
+    
     return nBarva;
 }
 

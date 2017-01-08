@@ -39,6 +39,7 @@ public class Renderer implements GLEventListener, MouseListener,
 
     int width, height, ox, oy;
     int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2, krokuZaSnimek, pocetSchemat;
+    int[] instrukce;
 
     boolean stop, jedenKrok, popisSchematu, reset, debug;
 
@@ -51,11 +52,15 @@ public class Renderer implements GLEventListener, MouseListener,
     OGLTextRenderer textRenderer;
 
     int shaderMInit;
-    int shaderM1, shaderM1LocStop, shaderM1LocDilku, shaderM1LocSchema;
-    int shaderM2, shaderM2LocStop, shaderM2LocDilku, shaderM2LocSchema;
+    int shaderM1, shaderM1LocStop, shaderM1LocDilku, shaderM1LocSchema,
+            shaderM1LocIns1, shaderM1LocIns2, shaderM1LocIns3, shaderM1LocIns4;
+    int shaderM2, shaderM2LocStop, shaderM2LocDilku, shaderM2LocSchema,
+            shaderM2LocIns1, shaderM2LocIns2, shaderM2LocIns3, shaderM2LocIns4;
     int shaderPInit;
-    int shaderP1, shaderP1LocStop, shaderP1LocSchema;
-    int shaderP2, shaderP2LocStop, shaderP2LocSchema;
+    int shaderP1, shaderP1LocStop, shaderP1LocSchema,
+            shaderP1LocIns1, shaderP1LocIns2, shaderP1LocIns3, shaderP1LocIns4;
+    int shaderP2, shaderP2LocStop, shaderP2LocSchema,
+            shaderP2LocIns1, shaderP2LocIns2, shaderP2LocIns3, shaderP2LocIns4;
 
     Camera cam = new Camera();
     Mat4 proj;
@@ -67,11 +72,13 @@ public class Renderer implements GLEventListener, MouseListener,
         reset = false;
         debug = false;
         popisSchematu = false;
-        krokuZaSnimek = 1;
+        krokuZaSnimek = 100;
         pocetSchemat = 13;
+        instrukce = new int[16];
         kroku = 0;
         pocetBodu = 100;
-        barevneSchema = 11;
+        barevneSchema = 0;
+        nastavInstrukce(barevneSchema);
         stareSchema = barevneSchema;
         GL2 gl = glDrawable.getGL().getGL2();
 
@@ -89,16 +96,32 @@ public class Renderer implements GLEventListener, MouseListener,
         shaderM1LocDilku = gl.glGetUniformLocation(shaderM1, "dilku");
         shaderM1LocStop = gl.glGetUniformLocation(shaderM1, "stop");
         shaderM1LocSchema = gl.glGetUniformLocation(shaderM1, "schema");
+        shaderM1LocIns1 = gl.glGetUniformLocation(shaderM1, "ins1");
+        shaderM1LocIns2 = gl.glGetUniformLocation(shaderM1, "ins2");
+        shaderM1LocIns3 = gl.glGetUniformLocation(shaderM1, "ins3");
+        shaderM1LocIns4 = gl.glGetUniformLocation(shaderM1, "ins4");
 
         shaderM2LocDilku = gl.glGetUniformLocation(shaderM2, "dilku");
         shaderM2LocStop = gl.glGetUniformLocation(shaderM2, "stop");
         shaderM2LocSchema = gl.glGetUniformLocation(shaderM2, "schema");
+        shaderM2LocIns1 = gl.glGetUniformLocation(shaderM2, "ins1");
+        shaderM2LocIns2 = gl.glGetUniformLocation(shaderM2, "ins2");
+        shaderM2LocIns3 = gl.glGetUniformLocation(shaderM2, "ins3");
+        shaderM2LocIns4 = gl.glGetUniformLocation(shaderM2, "ins4");
 
         shaderP1LocStop = gl.glGetUniformLocation(shaderP1, "stop");
         shaderP1LocSchema = gl.glGetUniformLocation(shaderP1, "schema");
+        shaderP1LocIns1 = gl.glGetUniformLocation(shaderP1, "ins1");
+        shaderP1LocIns2 = gl.glGetUniformLocation(shaderP1, "ins2");
+        shaderP1LocIns3 = gl.glGetUniformLocation(shaderP1, "ins3");
+        shaderP1LocIns4 = gl.glGetUniformLocation(shaderP1, "ins4");
 
         shaderP2LocStop = gl.glGetUniformLocation(shaderP2, "stop");
         shaderP2LocSchema = gl.glGetUniformLocation(shaderP2, "schema");
+        shaderP2LocIns1 = gl.glGetUniformLocation(shaderP2, "ins1");
+        shaderP2LocIns2 = gl.glGetUniformLocation(shaderP2, "ins2");
+        shaderP2LocIns3 = gl.glGetUniformLocation(shaderP2, "ins3");
+        shaderP2LocIns4 = gl.glGetUniformLocation(shaderP2, "ins4");
 
         cam = cam.withPosition(new Vec3D(5, 5, 2.5))
                 .withAzimuth(Math.PI * 1.25)
@@ -143,6 +166,7 @@ public class Renderer implements GLEventListener, MouseListener,
             if (kroku <= 1)
             {
                 stareSchema = barevneSchema;
+                nastavInstrukce(stareSchema);
             }
         }
         if (!stop)
@@ -224,6 +248,10 @@ public class Renderer implements GLEventListener, MouseListener,
         }
         gl.glUniform1f(shaderM2LocStop, s);
         gl.glUniform1i(shaderM2LocSchema, stareSchema);
+        gl.glUniform4f(shaderM2LocIns1, instrukce[0], instrukce[1], instrukce[2], instrukce[3]);
+        gl.glUniform4f(shaderM2LocIns2, instrukce[4], instrukce[5], instrukce[6], instrukce[7]);
+        gl.glUniform4f(shaderM2LocIns3, instrukce[8], instrukce[9], instrukce[10], instrukce[11]);
+        gl.glUniform4f(shaderM2LocIns4, instrukce[12], instrukce[13], instrukce[14], instrukce[15]);
 
         mravenci2.getColorTexture().bind(shaderM2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderM2, "texturaPole", 1);
@@ -237,6 +265,10 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glUniform1f(shaderP2LocStop, s);
         gl.glUniform1i(shaderP2LocSchema, stareSchema);
+        gl.glUniform4f(shaderP2LocIns1, instrukce[0], instrukce[1], instrukce[2], instrukce[3]);
+        gl.glUniform4f(shaderP2LocIns2, instrukce[4], instrukce[5], instrukce[6], instrukce[7]);
+        gl.glUniform4f(shaderP2LocIns3, instrukce[8], instrukce[9], instrukce[10], instrukce[11]);
+        gl.glUniform4f(shaderP2LocIns4, instrukce[12], instrukce[13], instrukce[14], instrukce[15]);
 
         mravenci2.getColorTexture().bind(shaderP2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderP2, "texturaPole", 1);
@@ -267,6 +299,10 @@ public class Renderer implements GLEventListener, MouseListener,
         }
         gl.glUniform1f(shaderM1LocStop, s);
         gl.glUniform1i(shaderM1LocSchema, stareSchema);
+        gl.glUniform4f(shaderM1LocIns1, instrukce[0], instrukce[1], instrukce[2], instrukce[3]);
+        gl.glUniform4f(shaderM1LocIns2, instrukce[4], instrukce[5], instrukce[6], instrukce[7]);
+        gl.glUniform4f(shaderM1LocIns3, instrukce[8], instrukce[9], instrukce[10], instrukce[11]);
+        gl.glUniform4f(shaderM1LocIns4, instrukce[12], instrukce[13], instrukce[14], instrukce[15]);
 
         mravenci1.getColorTexture().bind(shaderM1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderM1, "texturaPole", 1);
@@ -280,6 +316,10 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glUniform1f(shaderP1LocStop, s);
         gl.glUniform1i(shaderP1LocSchema, stareSchema);
+        gl.glUniform4f(shaderP1LocIns1, instrukce[0], instrukce[1], instrukce[2], instrukce[3]);
+        gl.glUniform4f(shaderP1LocIns2, instrukce[4], instrukce[5], instrukce[6], instrukce[7]);
+        gl.glUniform4f(shaderP1LocIns3, instrukce[8], instrukce[9], instrukce[10], instrukce[11]);
+        gl.glUniform4f(shaderP1LocIns4, instrukce[12], instrukce[13], instrukce[14], instrukce[15]);
 
         mravenci1.getColorTexture().bind(shaderP1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderP1, "texturaPole", 1);
@@ -290,6 +330,194 @@ public class Renderer implements GLEventListener, MouseListener,
 
         gl.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+    }
+
+    void nastavInstrukce(int barSchema)
+    {
+        /*
+        1 = doprava
+        2 = doleva
+        3 = dopředu
+        4 = dozadu
+         */
+        switch (barSchema)
+        {
+            case 0: //RL
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                for (int i = 2; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 1: //RRL
+                instrukce[0] = 1;
+                instrukce[1] = 1;
+                instrukce[2] = 2;
+                for (int i = 3; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 2: //RLL
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                instrukce[2] = 2;
+                for (int i = 3; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 3: //RRRLR
+                instrukce[0] = 1;
+                instrukce[1] = 1;
+                instrukce[2] = 1;
+                instrukce[3] = 2;
+                instrukce[4] = 1;
+                for (int i = 5; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 4: //RLRRRRRLL
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                instrukce[2] = 1;
+                instrukce[3] = 1;
+                instrukce[4] = 1;
+                instrukce[5] = 1;
+                instrukce[6] = 1;
+                instrukce[7] = 2;
+                instrukce[8] = 2;
+                for (int i = 9; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 5: //RLRRRRLLLRR
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                instrukce[2] = 1;
+                instrukce[3] = 1;
+                instrukce[4] = 1;
+                instrukce[5] = 1;
+                instrukce[6] = 2;
+                instrukce[7] = 2;
+                instrukce[8] = 2;
+                instrukce[9] = 1;
+                instrukce[10] = 1;
+                for (int i = 11; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 6: //RLLR
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                instrukce[2] = 2;
+                instrukce[3] = 1;
+                for (int i = 4; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 7: //RRLL
+                instrukce[0] = 1;
+                instrukce[1] = 1;
+                instrukce[2] = 2;
+                instrukce[3] = 2;
+                for (int i = 4; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 8: //LF
+                instrukce[0] = 2;
+                instrukce[1] = 3;
+                for (int i = 2; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 9: //RLLLLRRR
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                instrukce[2] = 2;
+                instrukce[3] = 2;
+                instrukce[4] = 2;
+                instrukce[5] = 1;
+                instrukce[6] = 1;
+                instrukce[7] = 1;
+                for (int i = 8; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 10: //LRRRRLLF
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                instrukce[2] = 2;
+                instrukce[3] = 2;
+                instrukce[4] = 2;
+                instrukce[5] = 1;
+                instrukce[6] = 1;
+                instrukce[7] = 3;
+                for (int i = 8; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 11:  //LRRRRRLLR
+                instrukce[0] = 2;
+                instrukce[1] = 1;
+                instrukce[2] = 1;
+                instrukce[3] = 1;
+                instrukce[4] = 1;
+                instrukce[5] = 1;
+                instrukce[6] = 2;
+                instrukce[7] = 2;
+                instrukce[8] = 1;
+                for (int i = 9; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 12:  //LRRRRLLLRRR 
+                instrukce[0] = 2;
+                instrukce[1] = 1;
+                instrukce[2] = 1;
+                instrukce[3] = 1;
+                instrukce[4] = 1;
+                instrukce[5] = 2;
+                instrukce[6] = 2;
+                instrukce[7] = 2;
+                instrukce[8] = 1;
+                instrukce[9] = 1;
+                instrukce[10] = 1;
+                for (int i = 11; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+            case 13:  //RLLLLRRRLLLR
+                instrukce[0] = 1;
+                instrukce[1] = 2;
+                instrukce[2] = 2;
+                instrukce[3] = 2;
+                instrukce[4] = 2;
+                instrukce[5] = 1;
+                instrukce[6] = 1;
+                instrukce[7] = 1;
+                instrukce[8] = 2;
+                instrukce[9] = 2;
+                instrukce[10] = 2;
+                instrukce[11] = 1;
+                for (int i = 12; i < instrukce.length; i++)
+                {
+                    instrukce[i] = 0;
+                }
+                break;
+        }
     }
 
     void inicializace(GLAutoDrawable glDrawable)
