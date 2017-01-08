@@ -25,7 +25,7 @@ public class textUtils
 
     public void vypisTextOvládání(boolean stop)
     {
-        String text = "Ovládání: kamera: [LMB], pohyb: [WASD] nebo šipky, [CTRL] a [Shift]";
+        String text = "Ovládání: kamera: [LMB], pohyb: [WASD] nebo šipky, [CTRL] a [Shift], přepnutí vzhledu [7]";
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 20, text);
         if (stop)
         {
@@ -47,13 +47,39 @@ public class textUtils
         }
         if (!popis)
         {
-            text += "; Zobrazení popisu chování [1]";
+            text += " (14 = vlastní [2]); Zobrazení popisu chování [1]";
         } else
         {
             text += "; Skrytí popisu [1]";
             vypisPopisSchema(instrukce);
         }
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 50, text);
+    }
+
+    public void vypisZadavani(int zadavaniCislo, int[] ins)
+    {
+        String text = "Zadávání schématu [WASD nebo šipky]: ";
+        for (int i = 0; i < zadavaniCislo; i++)
+        {
+            switch (ins[zadavaniCislo])
+            {
+                case 1:
+                    text += "R";
+                    break;
+                case 2:
+                    text += "L";
+                    break;
+                case 3:
+                    text += "F";
+                    break;
+                case 4:
+                    text += "B";
+                    break;
+            }
+        }
+        text += "; Ukončení zadávání [2]";
+         
+        textRenderer.drawStr2D(3, textRenderer.getHeight() - 125, text);
     }
 
     private void vypisPopisSchema(int[] instrukce)
@@ -85,30 +111,10 @@ public class textUtils
             }
         }
 
-        text2 +="bílá -> červená -> zelená -> modrá -> žlutá -> fialová -> tyrkysová ->";
+        text2 += "bílá -> červená -> zelená -> modrá -> žlutá -> fialová -> tyrkysová ->";
         String text3 = "černá -> tmavě červená -> tm. zelená -> tm. modrá -> tm. žlutá ->";
         String text4 = "tm. fialová -> tm. tyrkysová -> šedá -> oranžová -> bílá";
-        //bílá -> červená -> zelená -> modrá -> žlutá -> fialová -> tyrkysová -> černá -> tmavě červená ->
-        //tmavě želená -> tmavě modrá -> tmavě žlutá -> tmavě fialová -> tmavě tyrkysová -> šedá -> oranžová
-        /*
-                    r   g   b  
-                    1   1   1   bílá   
-                    1   0   0   červená
-                    0   1   0   zelená
-                    0   0   1   modrá
-                    1   1   0   žlutá
-                    1   0   1   fialová
-                    0   1   1   tyrkysová
-                    0   0   0   černá 
-                    0.5 0   0   tmavě červená
-                    0   0.5 0   tmavě zelená
-                    0   0   0.5 tmodrá
-                    0.5 0.5 0   tžlutá
-                    0.5 0   0.5 tfialová
-                    0   0.5 0.5 ttyrkysová
-                    05  0.5 0.5 šedá
-                    1   0.5 0   oranžová                    
-         */
+
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 65, text);
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 80, text2);
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 95, text3);
@@ -121,8 +127,7 @@ public class textUtils
         {
             krok = krok * krokuZaSnimek;
         }
-        int cislic = (int) (Math.log10(krok) + 1);
-        textRenderer.drawStr2D(textRenderer.getWidth() - (300 + cislic * 4), 3, "Kroků za snímek -[5/8]+[6/9]: "
+        textRenderer.drawStr2D(textRenderer.getWidth() / 3, 3, "Kroků za snímek -[5/8]+[6/9]: "
                 + krokuZaSnimek + "; Krok: " + krok + "; (c) PGRF UHK");
     }
 }

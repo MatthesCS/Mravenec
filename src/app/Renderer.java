@@ -38,10 +38,10 @@ public class Renderer implements GLEventListener, MouseListener,
 {
 
     int width, height, ox, oy;
-    int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2, krokuZaSnimek, pocetSchemat;
-    int[] instrukce;
+    int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2, krokuZaSnimek, pocetSchemat, zadavaniCislo;
+    int[] instrukce, vlastniInstrukce;
 
-    boolean stop, jedenKrok, popisSchematu, reset, debug;
+    boolean stop, jedenKrok, popisSchematu, reset, debug, zadavani = false;
 
     textUtils textUtils;
 
@@ -72,9 +72,11 @@ public class Renderer implements GLEventListener, MouseListener,
         reset = false;
         debug = false;
         popisSchematu = false;
-        krokuZaSnimek = 100;
-        pocetSchemat = 13;
+        krokuZaSnimek = 1;
+        pocetSchemat = 13+1;
         instrukce = new int[16];
+        vlastniInstrukce = new int[16];
+        zadavaniCislo = 0;
         kroku = 0;
         pocetBodu = 100;
         barevneSchema = 0;
@@ -153,6 +155,12 @@ public class Renderer implements GLEventListener, MouseListener,
     @Override
     public void display(GLAutoDrawable glDrawable)
     {
+        if(zadavaniCislo > 15 && zadavani)
+        {
+            zadavani = false;
+            zadavaniCislo = 0;
+        }
+        
         if (reset)
         {
             reset = false;
@@ -228,6 +236,10 @@ public class Renderer implements GLEventListener, MouseListener,
         textUtils.vypisCopyrightaKroky(kroku, krokuZaSnimek);
         textUtils.vypisTextOvládání(stop);
         textUtils.vypisTextSchéma(stareSchema, barevneSchema, popisSchematu, instrukce);
+        if (zadavani)
+        {
+            textUtils.vypisZadavani(zadavaniCislo, vlastniInstrukce);
+        }
     }
 
     void suda(GLAutoDrawable glDrawable)
@@ -425,10 +437,12 @@ public class Renderer implements GLEventListener, MouseListener,
                     instrukce[i] = 0;
                 }
                 break;
-            case 8: //LF
+            case 8: //LLLF
                 instrukce[0] = 2;
-                instrukce[1] = 3;
-                for (int i = 2; i < instrukce.length; i++)
+                instrukce[1] = 2;
+                instrukce[2] = 2;
+                instrukce[3] = 3;
+                for (int i = 4; i < instrukce.length; i++)
                 {
                     instrukce[i] = 0;
                 }
@@ -510,6 +524,9 @@ public class Renderer implements GLEventListener, MouseListener,
                 {
                     instrukce[i] = 0;
                 }
+                break;
+            case 14:
+                System.arraycopy(vlastniInstrukce, 0, instrukce, 0, instrukce.length);
                 break;
         }
     }
@@ -619,6 +636,22 @@ public class Renderer implements GLEventListener, MouseListener,
                 break;
             case KeyEvent.VK_2:
             case KeyEvent.VK_NUMPAD2:
+                if (!zadavani)
+                {
+                    zadavani = true;
+                    zadavaniCislo = 0;
+                } else
+                {
+                    zadavani = false;
+                    for (int i = zadavaniCislo; i < vlastniInstrukce.length; i++)
+                    {
+                        vlastniInstrukce[i] = 0;
+                    }
+                    zadavaniCislo = 0;
+                }
+                break;
+            case KeyEvent.VK_7:
+            case KeyEvent.VK_NUMPAD7:
                 debug = !debug;
                 break;
             case KeyEvent.VK_3:
@@ -658,19 +691,67 @@ public class Renderer implements GLEventListener, MouseListener,
                 break;
             case KeyEvent.VK_W:
             case KeyEvent.VK_UP:
-                cam = cam.forward(1);
+                if (zadavani)
+                {
+                    vlastniInstrukce[zadavaniCislo] = 3;
+                    zadavaniCislo++;
+                    if (zadavaniCislo > vlastniInstrukce.length)
+                    {
+                        zadavani = false;
+                        zadavaniCislo = 0;
+                    }
+                } else
+                {
+                    cam = cam.forward(1);
+                }
                 break;
             case KeyEvent.VK_D:
             case KeyEvent.VK_RIGHT:
-                cam = cam.right(1);
+                if (zadavani)
+                {
+                    vlastniInstrukce[zadavaniCislo] = 1;
+                    zadavaniCislo++;
+                    if (zadavaniCislo > vlastniInstrukce.length)
+                    {
+                        zadavani = false;
+                        zadavaniCislo = 0;
+                    }
+                } else
+                {
+                    cam = cam.right(1);
+                }
                 break;
             case KeyEvent.VK_S:
             case KeyEvent.VK_DOWN:
-                cam = cam.backward(1);
+                if (zadavani)
+                {
+                    vlastniInstrukce[zadavaniCislo] = 4;
+                    zadavaniCislo++;
+                    if (zadavaniCislo > vlastniInstrukce.length)
+                    {
+                        zadavani = false;
+                        zadavaniCislo = 0;
+                    }
+                } else
+                {
+                    cam = cam.backward(1);
+                }
                 break;
             case KeyEvent.VK_A:
             case KeyEvent.VK_LEFT:
-                cam = cam.left(1);
+                if (zadavani)
+                {
+                    vlastniInstrukce[zadavaniCislo] = 2;
+                    zadavaniCislo++;
+                    if (zadavaniCislo > vlastniInstrukce.length)
+                    {
+                        zadavani = false;
+                        zadavaniCislo = 0;
+                    }
+                } else
+                {
+                    cam = cam.left(1);
+                }
                 break;
             case KeyEvent.VK_CONTROL:
                 cam = cam.down(1);
