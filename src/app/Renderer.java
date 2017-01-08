@@ -38,7 +38,7 @@ public class Renderer implements GLEventListener, MouseListener,
 {
 
     int width, height, ox, oy;
-    int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2, krokuZaSnimek;
+    int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2, krokuZaSnimek, pocetSchemat;
 
     boolean stop, jedenKrok, popisSchematu, reset, debug;
 
@@ -68,9 +68,10 @@ public class Renderer implements GLEventListener, MouseListener,
         debug = false;
         popisSchematu = false;
         krokuZaSnimek = 1;
+        pocetSchemat = 13;
         kroku = 0;
         pocetBodu = 100;
-        barevneSchema = 0;
+        barevneSchema = 11;
         stareSchema = barevneSchema;
         GL2 gl = glDrawable.getGL().getGL2();
 
@@ -382,44 +383,52 @@ public class Renderer implements GLEventListener, MouseListener,
     {
         switch (e.getKeyCode())
         {
+            case KeyEvent.VK_0:
             case KeyEvent.VK_NUMPAD0:
                 barevneSchema++;
-                if (barevneSchema > 5)
+                if (barevneSchema > pocetSchemat)
                 {
                     barevneSchema = 0;
                 }
                 break;
+            case KeyEvent.VK_1:
             case KeyEvent.VK_NUMPAD1:
                 popisSchematu = !popisSchematu;
                 break;
+            case KeyEvent.VK_2:
             case KeyEvent.VK_NUMPAD2:
                 debug = !debug;
                 break;
+            case KeyEvent.VK_3:
             case KeyEvent.VK_NUMPAD3:
                 reset = !reset;
                 break;
+            case KeyEvent.VK_5:
             case KeyEvent.VK_NUMPAD5:
                 if (krokuZaSnimek > 1)
                 {
                     krokuZaSnimek--;
                 }
                 break;
+            case KeyEvent.VK_6:
             case KeyEvent.VK_NUMPAD6:
                 krokuZaSnimek++;
                 break;
+            case KeyEvent.VK_8:
             case KeyEvent.VK_NUMPAD8:
                 if (krokuZaSnimek > 10)
                 {
                     krokuZaSnimek -= 10;
                 }
                 break;
+            case KeyEvent.VK_9:
             case KeyEvent.VK_NUMPAD9:
                 krokuZaSnimek += 10;
                 break;
-            case KeyEvent.VK_M:
+            case KeyEvent.VK_ENTER:
                 stop = !stop;
                 break;
-            case KeyEvent.VK_N:
+            case KeyEvent.VK_SPACE:
                 if (stop)
                 {
                     jedenKrok = true;
@@ -446,9 +455,6 @@ public class Renderer implements GLEventListener, MouseListener,
                 break;
             case KeyEvent.VK_SHIFT:
                 cam = cam.up(1);
-                break;
-            case KeyEvent.VK_SPACE:
-                cam = cam.withFirstPerson(!cam.getFirstPerson());
                 break;
             case KeyEvent.VK_R:
                 cam = cam.mulRadius(0.9f);

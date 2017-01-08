@@ -30,6 +30,35 @@ int otocDoleva(int smer)
     return novySmer;
 }
 
+//otočí směr dopředu (zůstane stejný)
+int otocDopredu(int smer)
+{
+    return smer;
+}
+
+//otočí směr dozadu
+int otocDozadu(int smer)
+{
+    int novySmer = 0;
+    if(smer == 1)
+    {
+        novySmer = 2;
+    }
+    else if(smer == 2)
+    {
+        novySmer = 1;
+    }
+    else if(smer == 3)
+    {
+        novySmer = 4;
+    }
+    else if(smer == 4)
+    {
+        novySmer = 5;
+    }
+    return novySmer;
+}
+
 //otočí směr doprava
 int otocDoprava(int smer)
 {
@@ -65,35 +94,68 @@ int otocMravence(int smer, vec2 coord)
 {
     int novySmer = 0;
     vec4 barva = texture2D(texturaPole, coord);
-    if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b >= 0.8)
+    if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b >= 0.8)  //bílá
     {
-        novySmer = otocDoprava(smer);
-    }
-    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3)
-    {
-        if(schema == 0 || schema == 2 || schema >= 4)
-        {
+        if(schema == 8 || (schema >= 10 && schema <= 12))
+        {   
             novySmer = otocDoleva(smer);
         }
-        else if(schema == 1 || schema == 3)
+        else
         {
             novySmer = otocDoprava(smer);
         }
     }
-    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.8)
+    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3) //zelená
     {
-        if(schema == 1 || schema == 2)
+        if(schema == 0 || schema == 2 || (schema >= 4 && schema <= 6) || schema == 9 || schema == 13)
         {
             novySmer = otocDoleva(smer);
         }
-        else if(schema == 3 || schema >= 4)
+        else if(schema == 1 || schema == 3 || schema == 7 || (schema >= 10 && schema <= 12))
+        {
+            novySmer = otocDoprava(smer);
+        }
+        else if(schema == 8)
+        {
+            novySmer = otocDopredu(smer);
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.8)  //modrá
+    {
+        if(schema == 1 || schema == 2 || schema == 6 || schema == 7 || schema == 9 || schema == 13)
+        {
+            novySmer = otocDoleva(smer);
+        }
+        else if(schema == 3 || schema == 4 || schema == 5 || (schema >= 10 && schema <= 12))
         {
             novySmer = otocDoprava(smer);
         }
     }
-    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b <= 0.3)
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b <= 0.3)  //červená
     {
-        if(schema == 3)
+        if(schema == 3 || schema == 7 || schema == 9 || schema == 13)
+        {
+            novySmer = otocDoleva(smer);
+        }
+        else if((schema >= 4 && schema <= 6) || (schema >= 10 && schema <= 12))
+        {
+            novySmer = otocDoprava(smer);
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)  //žlutá
+    {
+        if(schema == 9 || schema == 13)
+        {
+            novySmer = otocDoleva(smer);
+        }
+        else if(schema >= 3)
+        {
+            novySmer = otocDoprava(smer);
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b >= 0.8)  //fialová
+    {
+        if(schema == 10 || schema == 12)
         {
             novySmer = otocDoleva(smer);
         }
@@ -102,57 +164,67 @@ int otocMravence(int smer, vec2 coord)
             novySmer = otocDoprava(smer);
         }
     }
-    else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)
+    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b >= 0.8)  //tyrkysová
     {
-        if(schema >= 3)
+        if(schema == 4 || schema == 9 || schema == 13)
         {
             novySmer = otocDoprava(smer);
         }
-    }
-    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b >= 0.8)
-    {
-        if(schema >= 4)
-        {
-            novySmer = otocDoprava(smer);
-        }
-    }
-    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b >= 0.8)
-    {
-        if(schema == 4)
-        {
-            novySmer = otocDoprava(smer);
-        }
-        else if(schema == 5)
+        else if(schema == 5 || schema == 10)
         {
             novySmer = otocDoleva(smer);
         }
     }
-    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b <= 0.3)
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b <= 0.3) //černá
     {
-        if(schema >= 4)
+        if(schema == 9 || schema == 13)
+        {
+            novySmer = otocDoprava(smer);
+        }
+        else if(schema >= 4)
         {
             novySmer = otocDoleva(smer);
         }
     }
-    else if(barva.r <= 0.3 && barva.g >= 0.3 && barva.g <= 0.6 && barva.b <= 0.3)
+    else if(barva.r <= 0.3 && barva.g >= 0.3 && barva.g <= 0.6 && barva.b <= 0.3)  //tmavě želená
     {
-        if(schema >= 4)
+        if(schema == 11 || schema == 12)
+        {
+            novySmer = otocDoprava(smer);
+        }
+        else if(schema >= 4)
         {
             novySmer = otocDoleva(smer);
         }
     }
-    else if(barva.r >= 0.3 && barva.r <= 0.6 && barva.g <= 0.3 && barva.b <= 0.3)
+    else if(barva.r >= 0.3 && barva.r <= 0.6 && barva.g <= 0.3 && barva.b <= 0.3)  //tmavě červená
     {
-        if(schema == 5)
+        if(schema == 5 || schema == 12)
         {
             novySmer = otocDoprava(smer);
         }
+        else if(schema == 13)
+        {
+            novySmer = otocDoleva(smer);
+        }
     }
-    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.3 && barva.b <= 0.6)
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.3 && barva.b <= 0.6)  //tmavě modrá
     {
-        if(schema == 5)
+        if(schema == 5 || schema == 12)
         {
             novySmer = otocDoprava(smer);
+        }
+        else if(schema == 13)
+        {
+            novySmer = otocDoleva(smer);
+        }
+    }
+    else if(barva.r >= 0.3 && barva.r <= 0.6 && barva.g >= 0.3 && barva.g <= 0.6 
+    && barva.b >= 0.3 && barva.b <= 0.6)  //šedá
+    {
+        if(schema == 13)
+        {
+            novySmer = otocDoleva(smer);
         }
     }
     return novySmer;

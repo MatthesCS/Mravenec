@@ -35,7 +35,7 @@ public class textUtils
         {
             text = "Stop:";
         }
-        text += " [M], krokování: [N], reset: [3]";
+        text += " [ENTER], krokování: [SPACE], reset: [3]";
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 35, text);
     }
 
@@ -65,25 +65,70 @@ public class textUtils
         switch (schema)
         {
             case 0:
+                //RL
                 text = "Bílá: doprava -> zelená: doleva -> bílá";
                 break;
             case 1:
+                //RRL
                 text = "Bílá: doprava -> zelená: doprava -> modrá: doleva -> bílá";
                 break;
             case 2:
+                //RLL
                 text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> bílá";
                 break;
             case 3:
+                //RRRLR
                 text = "Bílá: doprava -> zelená: doprava -> modrá: doprava -> červená: doleva -> žlutá: doprava -> bílá";
                 break;
             case 4:
+                //RLRRRRRLL
                 text = "Bílá: doprava -> zelená: doleva -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
                 text2 = "fialová: doprava -> tyrkysová: doprava -> černá: doleva -> tmavě zelená: doleva -> bílá";
                 break;
             case 5:
+                //RLRRRRLLLRR
                 text = "Bílá: doprava -> zelená: doleva -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
                 text2 = "fialová: doprava -> tyrkysová: doleva -> černá: doleva -> tmavě zelená: doleva ->";
                 text3 = "tmavě červená: doprava -> tmavě modrá: doprava -> bílá";
+                break;
+            case 6:
+                //RLLR
+                text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> červená: doprava -> bílá";
+                break;
+            case 7:
+                //RRLL
+                text = "Bílá: doprava -> zelená: doprava -> modrá: doleva -> červená: doleva -> bílá";
+                break;
+            case 8:
+                //LF
+                text = "Bílá: doleva -> zelená: dopředu -> bílá";
+                break;
+            case 9:
+                //RLLLLRRR
+                text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> červená: doleva -> žlutá: doleva ->";
+                text2 = "fialová: doprava -> tyrkysová: doprava -> černá: doprava ->  bílá";
+                break;
+            case 10:
+                //LRRRRLLL
+                text = "Bílá: doleva -> zelená: doprava -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
+                text2 = "fialová: doleva -> tyrkysová: doleva -> černá: doleva ->  bílá";
+                break;
+            case 11:
+                //LRRRRRLLR
+                text = "Bílá: doleva -> zelená: doprava -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
+                text2 = "fialová: doprava -> tyrkysová: doleva -> černá: doleva -> tmavě zelená: doprava -> bílá";
+                break;
+            case 12:
+                //LRRRRLLLRRR
+                text = "Bílá: doleva -> zelená: doprava -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
+                text2 = "fialová: doleva -> tyrkysová: doleva -> černá: doleva -> tmavě zelená: doprava ->";
+                text3 = "tmavě červená: doprava -> tmavě modrá: doprava -> bílá";
+                break;
+            case 13:
+                //RLLLLRRRLLLR
+                text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> červená: doleva -> žlutá: doleva ->";
+                text2 = "fialová: doprava -> tyrkysová: doprava -> černá: doprava -> tmavě zelená: doleva ->";
+                text3 = "tmavě červená: doleva -> tmavě modrá: doleva -> šedá: doprava -> bílá";
                 break;
         }
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 65, text);
@@ -93,12 +138,12 @@ public class textUtils
 
     public void vypisCopyrightaKroky(int krok, int krokuZaSnimek)
     {
-        if(krok > 1)
+        if (krok > 1)
         {
             krok = krok * krokuZaSnimek;
         }
         int cislic = (int) (Math.log10(krok) + 1);
         textRenderer.drawStr2D(textRenderer.getWidth() - (300 + cislic * 4), 3, "Kroků za snímek -[5/8]+[6/9]: "
-                + krokuZaSnimek + "; Krok: "+ krok + "; (c) PGRF UHK");
+                + krokuZaSnimek + "; Krok: " + krok + "; (c) PGRF UHK");
     }
 }
