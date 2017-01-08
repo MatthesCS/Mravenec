@@ -28,11 +28,10 @@ public class textUtils
     {
         String text = "Ovládání: kamera: [LMB], pohyb: [WASD] nebo šipky, [CTRL] a [Shift]";
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 20, text);
-        if(stop)
+        if (stop)
         {
             text = "Spuštění:";
-        }
-        else
+        } else
         {
             text = "Stop:";
         }
@@ -43,7 +42,7 @@ public class textUtils
     public void vypisTextSchéma(int stareSchema, int schema, boolean popis)
     {
         String text = "Barevné schéma číslo [0]: " + stareSchema;
-        if(stareSchema != schema)
+        if (stareSchema != schema)
         {
             text += " (nove schéma " + schema + " po resetu)";
         }
@@ -61,6 +60,8 @@ public class textUtils
     private void vypisPopisSchema(int schema)
     {
         String text = "";
+        String text2 = "";
+        String text3 = "";
         switch (schema)
         {
             case 0:
@@ -75,8 +76,19 @@ public class textUtils
             case 3:
                 text = "Bílá: doprava -> zelená: doprava -> modrá: doprava -> červená: doleva -> žlutá: doprava -> bílá";
                 break;
+            case 4:
+                text = "Bílá: doprava -> zelená: doleva -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
+                text2 = "fialová: doprava -> tyrkysová: doprava -> černá: doleva -> tmavě zelená: doleva -> bílá";
+                break;
+            case 5:
+                text = "Bílá: doprava -> zelená: doleva -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
+                text2 = "fialová: doprava -> tyrkysová: doleva -> černá: doleva -> tmavě zelená: doleva ->";
+                text3 = "tmavě červená: doprava -> tmavě modrá: doprava -> bílá";
+                break;
         }
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 65, text);
+        textRenderer.drawStr2D(3, textRenderer.getHeight() - 80, text2);
+        textRenderer.drawStr2D(3, textRenderer.getHeight() - 95, text3);
     }
 
     public void vypisCopyrightaKroky(int krok)

@@ -71,7 +71,7 @@ int otocMravence(int smer, vec2 coord)
     }
     else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b <= 0.3)
     {
-        if(schema == 0 || schema == 2)
+        if(schema == 0 || schema == 2 || schema >= 4)
         {
             novySmer = otocDoleva(smer);
         }
@@ -86,7 +86,7 @@ int otocMravence(int smer, vec2 coord)
         {
             novySmer = otocDoleva(smer);
         }
-        else if(schema == 3)
+        else if(schema == 3 || schema >= 4)
         {
             novySmer = otocDoprava(smer);
         }
@@ -97,10 +97,60 @@ int otocMravence(int smer, vec2 coord)
         {
             novySmer = otocDoleva(smer);
         }
+        else if(schema >= 4)
+        {
+            novySmer = otocDoprava(smer);
+        }
     }
     else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)
     {
-        if(schema == 3)
+        if(schema >= 3)
+        {
+            novySmer = otocDoprava(smer);
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b >= 0.8)
+    {
+        if(schema >= 4)
+        {
+            novySmer = otocDoprava(smer);
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b >= 0.8)
+    {
+        if(schema == 4)
+        {
+            novySmer = otocDoprava(smer);
+        }
+        else if(schema == 5)
+        {
+            novySmer = otocDoleva(smer);
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b <= 0.3)
+    {
+        if(schema >= 4)
+        {
+            novySmer = otocDoleva(smer);
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g >= 0.3 && barva.g <= 0.6 && barva.b <= 0.3)
+    {
+        if(schema >= 4)
+        {
+            novySmer = otocDoleva(smer);
+        }
+    }
+    else if(barva.r >= 0.3 && barva.r <= 0.6 && barva.g <= 0.3 && barva.b <= 0.3)
+    {
+        if(schema == 5)
+        {
+            novySmer = otocDoprava(smer);
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.3 && barva.b <= 0.6)
+    {
+        if(schema == 5)
         {
             novySmer = otocDoprava(smer);
         }

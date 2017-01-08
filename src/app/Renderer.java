@@ -40,7 +40,7 @@ public class Renderer implements GLEventListener, MouseListener,
     int width, height, ox, oy;
     int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2;
 
-    boolean inicializace, stop, jedenKrok, popisSchematu, reset;
+    boolean stop, jedenKrok, popisSchematu, reset;
 
     textUtils textUtils;
 
@@ -63,7 +63,6 @@ public class Renderer implements GLEventListener, MouseListener,
     @Override
     public void init(GLAutoDrawable glDrawable)
     {
-        inicializace = true;
         stop = true;
         reset = false;
         popisSchematu = false;
@@ -133,7 +132,6 @@ public class Renderer implements GLEventListener, MouseListener,
             reset = false;
             kroku = 0;
             stareSchema = barevneSchema;
-            inicializace = true;
             stop = true;
         }
         
@@ -163,6 +161,7 @@ public class Renderer implements GLEventListener, MouseListener,
         if (kroku == 0)
         {
             inicializace(glDrawable);
+            kroku++;
         } else if (kroku % 2 == 1)
         {
             licha(glDrawable);
@@ -177,7 +176,9 @@ public class Renderer implements GLEventListener, MouseListener,
         textureViewer.view(pole1.getColorTexture(), -1, 0.01, 0.99);
         textureViewer.view(mravenci2.getColorTexture(), 0.01, 0.01, 0.99);
         textureViewer.view(pole1.getColorTexture(), 0.01, -1, 0.99);*/
-        System.out.println(kroku);
+        
+        //System.out.println(kroku);
+        
         textUtils.vypisCopyrightaKroky(kroku);
         textUtils.vypisTextOvládání(stop);
         textUtils.vypisTextSchéma(stareSchema, barevneSchema, popisSchematu);
@@ -362,7 +363,7 @@ public class Renderer implements GLEventListener, MouseListener,
         {
             case KeyEvent.VK_NUMPAD0:
                 barevneSchema++;
-                if (barevneSchema > 3)
+                if (barevneSchema > 5)
                 {
                     barevneSchema = 0;
                 }

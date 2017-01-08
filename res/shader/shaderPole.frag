@@ -91,7 +91,81 @@ vec4 novaBarva(vec4 barva)
     }
     else if(barva.r >= 0.8 && barva.g >= 0.8 && barva.b <= 0.3)
     {
-        if(schema >= 3)
+        if(schema == 3)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+        else if(schema > 3)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 0.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r >= 0.8 && barva.g <= 0.3 && barva.b >= 0.8)
+    {
+        if(schema >= 4)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g >= 0.8 && barva.b >= 0.8)
+    {
+        if(schema >= 4)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 0.0;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b <= 0.3)
+    {
+        if(schema >= 4)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 0.5;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g >= 0.3 && barva.g <= 0.6 && barva.b <= 0.3)
+    {
+        if(schema == 4)
+        {
+            nBarva.r = 1.0;
+            nBarva.g = 1.0;
+            nBarva.b = 1.0;
+            nBarva.a = 1.0;
+        }
+        else if(schema >= 5)
+        {
+            nBarva.r = 0.5;
+            nBarva.g = 0.0;
+            nBarva.b = 0.0;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r >= 0.3 && barva.r <= 0.6 && barva.g <= 0.3 && barva.b <= 0.3)
+    {
+        if(schema >= 5)
+        {
+            nBarva.r = 0.0;
+            nBarva.g = 0.0;
+            nBarva.b = 0.5;
+            nBarva.a = 1.0;
+        }
+    }
+    else if(barva.r <= 0.3 && barva.g <= 0.3 && barva.b >= 0.3 && barva.b <= 0.6)
+    {
+        if(schema >= 5)
         {
             nBarva.r = 1.0;
             nBarva.g = 1.0;
