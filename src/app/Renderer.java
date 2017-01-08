@@ -38,9 +38,9 @@ public class Renderer implements GLEventListener, MouseListener,
 {
 
     int width, height, ox, oy;
-    int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2;
+    int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2, krokuZaSnimek;
 
-    boolean stop, jedenKrok, popisSchematu, reset;
+    boolean stop, jedenKrok, popisSchematu, reset, debug;
 
     textUtils textUtils;
 
@@ -65,7 +65,9 @@ public class Renderer implements GLEventListener, MouseListener,
     {
         stop = true;
         reset = false;
+        debug = false;
         popisSchematu = false;
+        krokuZaSnimek = 1;
         kroku = 0;
         pocetBodu = 100;
         barevneSchema = 0;
@@ -116,7 +118,7 @@ public class Renderer implements GLEventListener, MouseListener,
     void createBuffers(GL2 gl)
     {
         shaderMravenciInit = MeshGenerator.vytvorGridSMravencemUprostred(gl, pocetBodu, "inParamPos", "inColor");
-        //shaderMravenciInit = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 15);
+        //shaderMravenciInit = MeshGenerator.vytvorGridMravencu(gl, pocetBodu, "inParamPos", "inColor", 2);
         shaderMravenci1 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderMravenci2 = MeshGenerator.createGrid(gl, 2, "inParamPos");
         shaderPoleInit = MeshGenerator.vytvorGridMravencu(gl, 2, "inParamPos", "inColor", 0);
@@ -127,17 +129,17 @@ public class Renderer implements GLEventListener, MouseListener,
     @Override
     public void display(GLAutoDrawable glDrawable)
     {
-        if(reset)
+        if (reset)
         {
             reset = false;
             kroku = 0;
             stareSchema = barevneSchema;
             stop = true;
         }
-        
+
         if (barevneSchema != stareSchema)
         {
-            if (kroku == 0)
+            if (kroku <= 1)
             {
                 stareSchema = barevneSchema;
             }
@@ -165,21 +167,40 @@ public class Renderer implements GLEventListener, MouseListener,
         } else if (kroku % 2 == 1)
         {
             licha(glDrawable);
+            if (!stop)
+            {
+                for (int i = 1; i < krokuZaSnimek; i++)
+                {
+                    suda(glDrawable);
+                    licha(glDrawable);
+                }
+            }
         } else
         {
             suda(glDrawable);
+            if (!stop)
+            {
+                for (int i = 1; i < krokuZaSnimek; i++)
+                {
+                    licha(glDrawable);
+                    suda(glDrawable);
+                }
+            }
         }
 
-        textureViewer.view(pole1.getColorTexture(), -1, -1, 2);
+        if (!debug)
+        {
+            textureViewer.view(pole1.getColorTexture(), -1, -1, 2);
+        } else
+        {
+            textureViewer.view(mravenci1.getColorTexture(), -1, -1, 0.99);
+            textureViewer.view(pole1.getColorTexture(), -1, 0.01, 0.99);
+            textureViewer.view(mravenci2.getColorTexture(), 0.01, 0.01, 0.99);
+            textureViewer.view(pole1.getColorTexture(), 0.01, -1, 0.99);
+        }
 
-        /*textureViewer.view(mravenci1.getColorTexture(), -1, -1, 0.99);
-        textureViewer.view(pole1.getColorTexture(), -1, 0.01, 0.99);
-        textureViewer.view(mravenci2.getColorTexture(), 0.01, 0.01, 0.99);
-        textureViewer.view(pole1.getColorTexture(), 0.01, -1, 0.99);*/
-        
         //System.out.println(kroku);
-        
-        textUtils.vypisCopyrightaKroky(kroku);
+        textUtils.vypisCopyrightaKroky(kroku, krokuZaSnimek);
         textUtils.vypisTextOvládání(stop);
         textUtils.vypisTextSchéma(stareSchema, barevneSchema, popisSchematu);
     }
@@ -371,8 +392,29 @@ public class Renderer implements GLEventListener, MouseListener,
             case KeyEvent.VK_NUMPAD1:
                 popisSchematu = !popisSchematu;
                 break;
+            case KeyEvent.VK_NUMPAD2:
+                debug = !debug;
+                break;
             case KeyEvent.VK_NUMPAD3:
                 reset = !reset;
+                break;
+            case KeyEvent.VK_NUMPAD5:
+                if (krokuZaSnimek > 1)
+                {
+                    krokuZaSnimek--;
+                }
+                break;
+            case KeyEvent.VK_NUMPAD6:
+                krokuZaSnimek++;
+                break;
+            case KeyEvent.VK_NUMPAD8:
+                if (krokuZaSnimek > 10)
+                {
+                    krokuZaSnimek -= 10;
+                }
+                break;
+            case KeyEvent.VK_NUMPAD9:
+                krokuZaSnimek += 10;
                 break;
             case KeyEvent.VK_M:
                 stop = !stop;

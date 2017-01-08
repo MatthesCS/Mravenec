@@ -91,9 +91,14 @@ public class textUtils
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 95, text3);
     }
 
-    public void vypisCopyrightaKroky(int krok)
+    public void vypisCopyrightaKroky(int krok, int krokuZaSnimek)
     {
+        if(krok > 1)
+        {
+            krok = krok * krokuZaSnimek;
+        }
         int cislic = (int) (Math.log10(krok) + 1);
-        textRenderer.drawStr2D(textRenderer.getWidth() - (149 + cislic * 4), 3, "Kroků: " + krok + "; (c) PGRF UHK");
+        textRenderer.drawStr2D(textRenderer.getWidth() - (300 + cislic * 4), 3, "Kroků za snímek -[5/8]+[6/9]: "
+                + krokuZaSnimek + "; Krok: "+ krok + "; (c) PGRF UHK");
     }
 }
