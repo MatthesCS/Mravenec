@@ -227,7 +227,7 @@ public class Renderer implements GLEventListener, MouseListener,
         //System.out.println(kroku);
         textUtils.vypisCopyrightaKroky(kroku, krokuZaSnimek);
         textUtils.vypisTextOvládání(stop);
-        textUtils.vypisTextSchéma(stareSchema, barevneSchema, popisSchematu);
+        textUtils.vypisTextSchéma(stareSchema, barevneSchema, popisSchematu, instrukce);
     }
 
     void suda(GLAutoDrawable glDrawable)
@@ -334,12 +334,6 @@ public class Renderer implements GLEventListener, MouseListener,
 
     void nastavInstrukce(int barSchema)
     {
-        /*
-        1 = doprava
-        2 = doleva
-        3 = dopředu
-        4 = dozadu
-         */
         switch (barSchema)
         {
             case 0: //RL

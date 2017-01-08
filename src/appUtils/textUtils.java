@@ -5,7 +5,6 @@
  */
 package appUtils;
 
-import com.jogamp.opengl.GLAutoDrawable;
 import java.awt.Color;
 import oglutils.OGLTextRenderer;
 
@@ -39,7 +38,7 @@ public class textUtils
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 35, text);
     }
 
-    public void vypisTextSchéma(int stareSchema, int schema, boolean popis)
+    public void vypisTextSchéma(int stareSchema, int schema, boolean popis, int[] instrukce)
     {
         String text = "Barevné schéma číslo [0]: " + stareSchema;
         if (stareSchema != schema)
@@ -52,88 +51,46 @@ public class textUtils
         } else
         {
             text += "; Skrytí popisu [1]";
-            vypisPopisSchema(schema);
+            vypisPopisSchema(instrukce);
         }
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 50, text);
     }
 
-    private void vypisPopisSchema(int schema)
+    private void vypisPopisSchema(int[] instrukce)
     {
-        String text = "";
-        String text2 = "";
-        String text3 = "";
-        switch (schema)
+        String text = "Instrukce: ";
+        String text2 = "Posloupnost barev: ";
+        for (int i = 0; i < instrukce.length; i++)
         {
-            case 0:
-                //RL město a pak dálnice
-                text = "Bílá: doprava -> zelená: doleva -> bílá";
-                break;
-            case 1:
-                //RRL dálnice
-                text = "Bílá: doprava -> zelená: doprava -> modrá: doleva -> bílá";
-                break;
-            case 2:
-                //RLL velké město
-                text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> bílá";
-                break;
-            case 3:
-                //RRRLR další velké město
-                text = "Bílá: doprava -> zelená: doprava -> modrá: doprava -> červená: doleva -> žlutá: doprava -> bílá";
-                break;
-            case 4:
-                //RLRRRRRLL čtverec
-                text = "Bílá: doprava -> zelená: doleva -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
-                text2 = "fialová: doprava -> tyrkysová: doprava -> černá: doleva -> tmavě zelená: doleva -> bílá";
-                break;
-            case 5:
-                //RLRRRRLLLRR jiný čtverec
-                text = "Bílá: doprava -> zelená: doleva -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
-                text2 = "fialová: doprava -> tyrkysová: doleva -> černá: doleva -> tmavě zelená: doleva ->";
-                text3 = "tmavě červená: doprava -> tmavě modrá: doprava -> bílá";
-                break;
-            case 6:
-                //RLLR město s hraniční výplní a dálnicemi
-                text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> červená: doprava -> bílá";
-                break;
-            case 7:
-                    //RRLL město ve tvaru mozku
-                text = "Bílá: doprava -> zelená: doprava -> modrá: doleva -> červená: doleva -> bílá";
-                break;
-            case 8:
-                //LF binární počítání
-                text = "Bílá: doleva -> zelená: dopředu -> bílá";
-                break;
-            case 9:
-                //RLLLLRRR  mozek ve čtverci
-                text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> červená: doleva -> žlutá: doleva ->";
-                text2 = "fialová: doprava -> tyrkysová: doprava -> černá: doprava ->  bílá";
-                break;
-            case 10:
-                //LRRRRLLL mozek ve čtvrerci otočený
-                text = "Bílá: doleva -> zelená: doprava -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
-                text2 = "fialová: doleva -> tyrkysová: doleva -> černá: doleva ->  bílá";
-                break;
-            case 11:
-                //LRRRRRLLR čtverec s dálnicemi a městy
-                text = "Bílá: doleva -> zelená: doprava -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
-                text2 = "fialová: doprava -> tyrkysová: doleva -> černá: doleva -> tmavě zelená: doprava -> bílá";
-                break;
-            case 12:
-                //LRRRRLLLRRR čtverec se spirálou
-                text = "Bílá: doleva -> zelená: doprava -> modrá: doprava -> červená: doprava -> žlutá: doprava ->";
-                text2 = "fialová: doleva -> tyrkysová: doleva -> černá: doleva -> tmavě zelená: doprava ->";
-                text3 = "tmavě červená: doprava -> tmavě modrá: doprava -> bílá";
-                break;
-            case 13:
-                //RLLLLRRRLLLR čtverec s logaritmoou spirálou
-                text = "Bílá: doprava -> zelená: doleva -> modrá: doleva -> červená: doleva -> žlutá: doleva ->";
-                text2 = "fialová: doprava -> tyrkysová: doprava -> černá: doprava -> tmavě zelená: doleva ->";
-                text3 = "tmavě červená: doleva -> tmavě modrá: doleva -> šedá: doprava -> bílá";
-                break;
-                
-                //bílá -> červená -> zelená -> modrá -> žlutá -> fialová -> tyrkysová -> černá -> tmavě červená ->
-                //tmavě želená -> tmavě modrá -> tmavě žlutá -> tmavě fialová -> tmavě tyrkysová -> šedá -> oranžová
-                /*
+            /*
+            1 = doprava
+            2 = doleva
+            3 = dopředu
+            4 = dozadu
+             */
+            switch (instrukce[i])
+            {
+                case 1:
+                    text += "R";
+                    break;
+                case 2:
+                    text += "L";
+                    break;
+                case 3:
+                    text += "F";
+                    break;
+                case 4:
+                    text += "B";
+                    break;
+            }
+        }
+
+        text2 +="bílá -> červená -> zelená -> modrá -> žlutá -> fialová -> tyrkysová ->";
+        String text3 = "černá -> tmavě červená -> tm. zelená -> tm. modrá -> tm. žlutá ->";
+        String text4 = "tm. fialová -> tm. tyrkysová -> šedá -> oranžová -> bílá";
+        //bílá -> červená -> zelená -> modrá -> žlutá -> fialová -> tyrkysová -> černá -> tmavě červená ->
+        //tmavě želená -> tmavě modrá -> tmavě žlutá -> tmavě fialová -> tmavě tyrkysová -> šedá -> oranžová
+        /*
                     r   g   b  
                     1   1   1   bílá   
                     1   0   0   červená
@@ -151,11 +108,11 @@ public class textUtils
                     0   0.5 0.5 ttyrkysová
                     05  0.5 0.5 šedá
                     1   0.5 0   oranžová                    
-                */
-        }
+         */
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 65, text);
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 80, text2);
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 95, text3);
+        textRenderer.drawStr2D(3, textRenderer.getHeight() - 110, text4);
     }
 
     public void vypisCopyrightaKroky(int krok, int krokuZaSnimek)
