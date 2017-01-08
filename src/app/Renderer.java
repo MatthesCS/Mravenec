@@ -38,9 +38,9 @@ public class Renderer implements GLEventListener, MouseListener,
 {
 
     int width, height, ox, oy;
-    int pocetBodu, barevneSchema, kroku, krokChache = -2;
+    int pocetBodu, barevneSchema, stareSchema, kroku, krokChache = -2;
 
-    boolean inicializace, stop, jedenKrok, popisSchematu;
+    boolean inicializace, stop, jedenKrok, popisSchematu, reset;
 
     textUtils textUtils;
 
@@ -65,10 +65,12 @@ public class Renderer implements GLEventListener, MouseListener,
     {
         inicializace = true;
         stop = true;
+        reset = false;
         popisSchematu = false;
         kroku = 0;
         pocetBodu = 100;
         barevneSchema = 0;
+        stareSchema = barevneSchema;
         GL2 gl = glDrawable.getGL().getGL2();
 
         OGLUtils.printOGLparameters(gl);
@@ -126,6 +128,22 @@ public class Renderer implements GLEventListener, MouseListener,
     @Override
     public void display(GLAutoDrawable glDrawable)
     {
+        if(reset)
+        {
+            reset = false;
+            kroku = 0;
+            stareSchema = barevneSchema;
+            inicializace = true;
+            stop = true;
+        }
+        
+        if (barevneSchema != stareSchema)
+        {
+            if (kroku == 0)
+            {
+                stareSchema = barevneSchema;
+            }
+        }
         if (!stop)
         {
             kroku++;
@@ -154,16 +172,15 @@ public class Renderer implements GLEventListener, MouseListener,
         }
 
         textureViewer.view(pole1.getColorTexture(), -1, -1, 2);
-        
+
         /*textureViewer.view(mravenci1.getColorTexture(), -1, -1, 0.99);
         textureViewer.view(pole1.getColorTexture(), -1, 0.01, 0.99);
         textureViewer.view(mravenci2.getColorTexture(), 0.01, 0.01, 0.99);
         textureViewer.view(pole1.getColorTexture(), 0.01, -1, 0.99);*/
-
         System.out.println(kroku);
         textUtils.vypisCopyrightaKroky(kroku);
-        textUtils.vypisTextOvládání();
-        textUtils.vypisTextSchéma(barevneSchema, popisSchematu);
+        textUtils.vypisTextOvládání(stop);
+        textUtils.vypisTextSchéma(stareSchema, barevneSchema, popisSchematu);
     }
 
     void suda(GLAutoDrawable glDrawable)
@@ -183,7 +200,7 @@ public class Renderer implements GLEventListener, MouseListener,
             s = (float) 1.0;
         }
         gl.glUniform1f(shaderM2LocStop, s);
-        gl.glUniform1i(shaderM2LocSchema, barevneSchema);
+        gl.glUniform1i(shaderM2LocSchema, stareSchema);
 
         mravenci2.getColorTexture().bind(shaderM2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderM2, "texturaPole", 1);
@@ -196,7 +213,7 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
         gl.glUniform1f(shaderP2LocStop, s);
-        gl.glUniform1i(shaderP2LocSchema, barevneSchema);
+        gl.glUniform1i(shaderP2LocSchema, stareSchema);
 
         mravenci2.getColorTexture().bind(shaderP2, "texturaMravenci", 0);
         pole2.getColorTexture().bind(shaderP2, "texturaPole", 1);
@@ -226,7 +243,7 @@ public class Renderer implements GLEventListener, MouseListener,
             s = (float) 1.0;
         }
         gl.glUniform1f(shaderM1LocStop, s);
-        gl.glUniform1i(shaderM1LocSchema, barevneSchema);
+        gl.glUniform1i(shaderM1LocSchema, stareSchema);
 
         mravenci1.getColorTexture().bind(shaderM1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderM1, "texturaPole", 1);
@@ -239,7 +256,7 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
         gl.glUniform1f(shaderP1LocStop, s);
-        gl.glUniform1i(shaderP1LocSchema, barevneSchema);
+        gl.glUniform1i(shaderP1LocSchema, stareSchema);
 
         mravenci1.getColorTexture().bind(shaderP1, "texturaMravenci", 0);
         pole1.getColorTexture().bind(shaderP1, "texturaPole", 1);
@@ -352,6 +369,9 @@ public class Renderer implements GLEventListener, MouseListener,
                 break;
             case KeyEvent.VK_NUMPAD1:
                 popisSchematu = !popisSchematu;
+                break;
+            case KeyEvent.VK_NUMPAD3:
+                reset = !reset;
                 break;
             case KeyEvent.VK_M:
                 stop = !stop;

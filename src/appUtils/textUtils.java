@@ -24,15 +24,29 @@ public class textUtils
         this.textRenderer.setColor(Color.BLUE);
     }
 
-    public void vypisTextOvládání()
+    public void vypisTextOvládání(boolean stop)
     {
-        String text = "Ovládání: kamera: [LMB], pohyb: [WASD] nebo šipky, [CTRL] a [Shift], ";
+        String text = "Ovládání: kamera: [LMB], pohyb: [WASD] nebo šipky, [CTRL] a [Shift]";
         textRenderer.drawStr2D(3, textRenderer.getHeight() - 20, text);
+        if(stop)
+        {
+            text = "Spuštění:";
+        }
+        else
+        {
+            text = "Stop:";
+        }
+        text += " [M], krokování: [N], reset: [3]";
+        textRenderer.drawStr2D(3, textRenderer.getHeight() - 35, text);
     }
 
-    public void vypisTextSchéma(int schema, boolean popis)
+    public void vypisTextSchéma(int stareSchema, int schema, boolean popis)
     {
-        String text = "Barevné schéma číslo [0]: " + schema;
+        String text = "Barevné schéma číslo [0]: " + stareSchema;
+        if(stareSchema != schema)
+        {
+            text += " (nove schéma " + schema + " po resetu)";
+        }
         if (!popis)
         {
             text += "; Zobrazení popisu chování [1]";
@@ -41,7 +55,7 @@ public class textUtils
             text += "; Skrytí popisu [1]";
             vypisPopisSchema(schema);
         }
-        textRenderer.drawStr2D(3, textRenderer.getHeight() - 35, text);
+        textRenderer.drawStr2D(3, textRenderer.getHeight() - 50, text);
     }
 
     private void vypisPopisSchema(int schema)
@@ -62,7 +76,7 @@ public class textUtils
                 text = "Bílá: doprava -> zelená: doprava -> modrá: doprava -> červená: doleva -> žlutá: doprava -> bílá";
                 break;
         }
-        textRenderer.drawStr2D(3, textRenderer.getHeight() - 50, text);
+        textRenderer.drawStr2D(3, textRenderer.getHeight() - 65, text);
     }
 
     public void vypisCopyrightaKroky(int krok)
